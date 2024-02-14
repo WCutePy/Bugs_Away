@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}base page{% endblock %}</title>
+    <!-- Common CSS and JS references go here -->
+
+    {% block headerJS %}{% endblock %}
+    {% block headerCSS %}{% endblock %}
+</head>
+<body>
+    {% include "FSApp/base_partials/header.html" %}
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+{#    <!-- {% include 'fsapp/partials/footer.html' %} -->#}
+</body>
+</html>
