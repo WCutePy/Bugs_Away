@@ -10,7 +10,7 @@ def game(request):
 
 
 def stats(request):
-    return HttpResponse("stats not implemented yet")
+    return render(request, "FSApp/pages/stats.html")
 
 
 def login(request):

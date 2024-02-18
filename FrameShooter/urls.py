@@ -21,5 +21,6 @@ from FSApp import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.game)
+    path("", views.game),
+    path("stats", views.stats)
 ]

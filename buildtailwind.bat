@@ -1,0 +1,1 @@
+npx tailwindcss -i ./FSApp/static/FSApp/css/base_template.css -o ./FSApp/static/FSApp/css/base.css --watch
