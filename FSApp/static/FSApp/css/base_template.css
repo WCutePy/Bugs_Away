@@ -2,11 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .navbar-link-current {
   @apply bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium;
 }
 
 .navbar-link-default {
   @apply text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium;
+}
+
+@layer base {
+  .bg-discord-default {
+    --tw-bg-opacity: 1;
+    background-color: rgb(54 57 62 / var(--tw-bg-opacity));
+  }
+
+  .bg-discord-blue {
+    --tw-bg-opacity: 1;
+    background-color: rgb(114 137 218 / var(--tw-bg-opacity));
+  }
+}
+
+@layer components {
+  .game-target {
+    border-radius: 0.5rem/* 8px */;
+    --tw-bg-opacity: 1;
+    background-color: rgb(185 28 28 / var(--tw-bg-opacity));
+    height: 10%;
+    width: 10%;
+    position: relative;
+    left: 5%;
+    top: 5%;
+  }
+}
+
+.game-frame {
+  @apply bg-discord-blue border-gray-200 rounded-lg shadow dark:border-gray-700 h-80 w-80
 }
 

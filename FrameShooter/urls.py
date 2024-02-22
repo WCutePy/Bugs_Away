@@ -22,5 +22,8 @@ from FSApp import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.game),
-    path("stats", views.stats)
+    path("stats", views.stats),
+    path(f"{views.get_game_state.__name__}", views.get_game_state),
+    path(f"{views.start_game.__name__}", views.start_game),
+    path(views.process_click.__name__, views.process_click),
 ]

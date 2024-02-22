@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="h-full bg-zinc-900 text-white" lang="en">
+<!-- bg-zinc-900 -->
+<html class="h-full bg-discord-default text-white" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}base page{% endblock %}</title>
 
     <link href="../../static/FSApp/css/base.css" rel="stylesheet">
+    <link rel="shortcut icon" href="#">
 
     {% block headerJS %}{% endblock %}
     {% block headerCSS %}{% endblock %}
@@ -14,7 +16,7 @@
 
     {% include "FSApp/base_partials/navbar.html" %}
 
-    <div class="content">
+    <div>
         {% block content %}{% endblock %}
     </div>
 
