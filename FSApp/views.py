@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from threading import Lock
 from random import randint
+from FSApp.globals import activeGames, scheduler
+from FSApp.schedules import updateGameState
 
 
 # Create your views here.
 
-games = {}
+tempGameId = 0
 
 count = 0
 
@@ -24,9 +26,17 @@ def login(request):
 
 
 def start_game(request):
-    gameId = 1
-    games[gameId] = [Lock(), [], 0]
-    cGame = games[gameId]
+    global tempGameId
+    tempGameId += 1
+    gameId = tempGameId
+    activeGames[gameId] = [
+        Lock(),
+        [],
+        0,
+        scheduler.add_job(updateGameState, "interval", seconds=0.025,
+                          id=str(gameId), args=(gameId,))
+    ]
+    cGame = activeGames[gameId]
     with cGame[0]:
         for i, a in enumerate(
             ([5, 15, 0], [59, 17, 1], [40, 50, 2], [50, 39, 3])
@@ -38,22 +48,13 @@ def start_game(request):
 
 def get_game_state(request):
     global count
-    count += 1
-    cGame = games[1]
-    if count % 25 == 0:
-        with cGame[0]:
-            for target in cGame[1]:
-                target[1] += 1
-    if count % 125 == 0:
-        with cGame[0]:
-            cGame[1].append([randint(0, 91), randint(0, 50), cGame[2]])
-            cGame[2] += 1
+    cGame = activeGames[tempGameId]
     return JsonResponse({"targets": cGame[1]})
 
 
 def process_click(request):
     data = request.GET
-    cGame = games[1]
+    cGame = activeGames[tempGameId]
     x, y, hitTarget = data["x"], data["y"], data["hitTarget"]
 
     if hitTarget == "":
