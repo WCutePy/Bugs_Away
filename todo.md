@@ -1,12 +1,11 @@
 ### Todo
 
-- [ ] update gamestate with APScheduler
-- [ ] SQL design base tables: Player, player x game (?), Game, Click
+- [ ] SQL design base tables: Player, player x game_page (?), Game, Click
 - [ ] PY send data to SQL table Click and Game
 - [ ] html Login page
 - [ ] PY login session + SQL Player table
 - [ ] html Game summary page, includes table
-- [ ] PY generate game summary page graphs
+- [ ] PY generate game_page summary page graphs
 
 ### In Progress
 
@@ -23,3 +22,4 @@
 - [X] PY generate random target (basic)
 - [X] JS POST request current target locations
 - [X] JS POST send click information
+- [x] update gamestate with APScheduler
