@@ -1,7 +1,6 @@
 ### Todo
 
-- [ ] SQL design base tables: Player, player x game_page (?), Game, Click
-- [ ] PY send data to SQL table Click and Game
+- [ ] have the javascript interval stop at end
 - [ ] html Login page
 - [ ] PY login session + SQL Player table
 - [ ] html Game summary page, includes table
@@ -23,3 +22,7 @@
 - [X] JS POST request current target locations
 - [X] JS POST send click information
 - [x] update gamestate with APScheduler
+- [x] SQL design base tables: Player, player x game_page (?), Game, Click
+- [x] PY send data to SQL table Click and Game
+- [x] create death trigger
+- [x] hp count and kill count

@@ -1,6 +1,6 @@
 
 let gameId;
-let gameUpdater;
+let updateInterval;
 
 let clicked = null;
 let targetn = 0;
@@ -21,7 +21,7 @@ function clickedStartGame(event){
         success: function (data) {
             gameId = data["gameId"];
             requestGameState();
-            gameUpdater = setInterval(requestGameState, 100);
+            updateInterval = setInterval(requestGameState, 100);
             // requestAnimationFrame(requestGameState);
         },
         error: function (error) {
@@ -52,6 +52,7 @@ function requestGameState() {
 
 function updateGameState(data) {
     const container = document.getElementById("frame");
+
     const targets = data["targets"];
 
     const existingTargets = Array.from(container.getElementsByClassName("game-target")); // change into get children if slow
@@ -79,33 +80,49 @@ function updateGameState(data) {
             container.appendChild(newTarget);
         } 
     });
+
+    document.getElementById("hp-display").innerHTML = data["hp"];
+    document.getElementById("kill-display").innerHTML = data["kills"];
+    
+    if (data["terminate"]){
+        clearInterval(updateInterval);
+    }
 }
 
 
 function clickedFrame(event) {
-    console.log( `Offset X/Y: ${event.offsetX}, ${event.offsetY}`);
+    let container = event.currentTarget;
+
+    let rect = container.getBoundingClientRect();
+
+    let x = ((event.clientX - rect.left) / rect.width) * 100;
+    let y = ((event.clientY - rect.top) / rect.height) * 100;
+
+    console.log(`Offset X/Y: ${x}, ${y}`);
+    
     let response = {
         "gameId": gameId,
-        "x": event.offsetX,
-        "y": event.offsetY,
+        "x": x,
+        "y": y,
         "hitTarget": null
     };
+    
     if (clicked != null){
         response["hitTarget"] = clicked.id;
         clicked = null;
     }
 
     $.ajax({
-        url: "process_click",
-        method: "GET",
+        url: "receive_click",
+        method: "POST",
         dataType: "json",
         data: response,
         // success: function (data) {
         
         // },
-        error: function (error) {
-            console.error("Error in AJAX clicked frame:", error);
-        }
+        // error: function (error) {
+        //     console.error("Error in AJAX clicked frame:", error);
+        // }
     })
 }
 
@@ -120,6 +137,7 @@ function createTarget(targetId, x, y) {
     target.classList.add("game-target");
     target.style.left = "" + x + "%";
     target.style.top = "" + y + "%";
+    target.style.transform = "translate(-50%, -50%)";
 
     target.onclick = clickedTarget;
 

@@ -30,13 +30,13 @@
     background-color: rgb(185 28 28 / var(--tw-bg-opacity));
     height: 10%;
     width: 10%;
-    position: relative;
+    position: absolute;
     left: 5%;
     top: 5%;
   }
 }
 
 .game-frame {
-  @apply bg-discord-blue border-gray-200 rounded-lg shadow dark:border-gray-700 h-80 w-80
+  @apply bg-discord-blue border-gray-200 rounded-lg shadow dark:border-gray-700 h-80 w-80 relative
 }
 

@@ -4,38 +4,44 @@
 
 {% block content %}
 
-<style>
-  .game-target {
-    border-radius: 0.5rem/* 8px */;
-    --tw-bg-opacity: 1;
-    background-color: rgb(185 28 28 / var(--tw-bg-opacity));
-    height: 10%;
-    width: 10%;
-    position: fixed;
-    left: 5%;
-    top: 5%;
-  }
-</style>
-  <!-- I DONT FUCKING KNOW WHY THIS DOESN'T WORK IF IT ISN'T HERE, KILL ME -->
+
 
 <div>
-  <br>
+
   <div>
+    <br>
 
-  <div class="flex justify-center">
-    <button id="start-game" type="button"
-            class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-    >Start Game</button>
-  </div>
+    <div class="flex justify-center">
+      <button id="start-game" type="button"
+              class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+      >Start Game</button>
+    </div>
 
-  <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="grid grid-cols-3">
 
-    <div id="frame" class="game-frame">
+      <div id="hp-container" class="relative place-self-end">
+        <img src="../../../static/FSApp/img/heart-70px.svg" alt="health image">
+        <div id="hp-display" class="absolute text-white text-4xl" style="left: 40%; top: 8%;">
+          3
+        </div>
+      </div>
 
+      <div id="frame" class="game-frame justify-self-center">
+        {% comment %} <div class="game-target"></div> {% endcomment %}
+        {% comment %} in case that things don't show up, uncomment the div above {% endcomment %}
+      </div>
+
+      <div id="kills-section" class="flex items-center self-end"> 
+        <div id="kill-display" class="text-white text-2xl min-w-16 text-center">
+        0
+        </div>
+        <img src="../../../static/FSApp/img/target-70px.svg" alt="kills image" style="width: 70px; height: 70px;">
+
+      </div>
+    
     </div>
 
   </div>
-</div>
 </div>
 
 

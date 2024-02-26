@@ -23,8 +23,12 @@ class Game(models.Model):
 
 
 class Click(models.Model):
+    frame = models.IntegerField()
     x = models.DecimalField(max_digits=6, decimal_places=3)
     y = models.DecimalField(max_digits=6, decimal_places=3)
-    frame = models.IntegerField()
     hit = models.BooleanField()
+    dx = models.DecimalField(max_digits=6, decimal_places=3, null=True)
+    dy = models.DecimalField(max_digits=6, decimal_places=3, null=True)
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)

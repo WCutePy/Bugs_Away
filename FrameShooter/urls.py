@@ -26,5 +26,5 @@ urlpatterns = [
     path("stats", views.stats),
     path(game_responses.get_game_state.__name__, game_responses.get_game_state),
     path(game_responses.start_game.__name__, game_responses.start_game),
-    path(game_responses.process_click.__name__, game_responses.process_click),
+    path(game_responses.receive_click.__name__, game_responses.receive_click),
 ]
