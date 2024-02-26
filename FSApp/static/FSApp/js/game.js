@@ -145,19 +145,22 @@ function createTarget(targetId, x, y) {
     return target;
 }
 
+
 // function createTarget(targetId, x, y) {
 //     let target = document.createElement("img");
 //     target.classList.add("game-target");
-
+//
 //     target.style.left = "" + x + "%";
 //     target.style.top = "" + y + "%";
+//     target.style.transform = "translate(-50%, -50%)";
+//
 //     target.src = "../../../static/FSApp/img/donut.jpg";
-
+//
 //     target.style.width = "" + 10 + "%";
 //     target.style.height = "" + 10 + "%";
-
+//
 //     target.onclick = clickedTarget;
-
+//
 //     target.id = targetId;
 //     return target;
 // }
