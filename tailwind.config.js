@@ -4,10 +4,12 @@ module.exports = {
       "./FSApp/templates/**/*.html",
       "./FSApp/static/js/**/*.js",
   ],
-  theme: {
-    extend: {},
+    theme: {
+      extend: {},
 
   },
-  plugins: [],
+    plugins: [
+      require('@tailwindcss/forms'),
+    ],
 }
 

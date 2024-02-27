@@ -1,0 +1,24 @@
+{
+  "name": "FrameShooter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NepNeppedYuumi/FrameShooter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NepNeppedYuumi/FrameShooter/issues"
+  },
+  "homepage": "https://github.com/NepNeppedYuumi/FrameShooter#readme",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "tailwindcss": "^3.4.1"
+  }
+}

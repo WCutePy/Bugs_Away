@@ -14,6 +14,7 @@ def stats(request):
 
 
 def login(request):
-    return HttpResponse("Login not implemented yet")
+    if request.method == "GET":
+        return render(request, "FSApp/pages/login.html")
 
 

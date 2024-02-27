@@ -40,3 +40,10 @@
   @apply bg-discord-blue border-gray-200 rounded-lg shadow dark:border-gray-700 h-80 w-80 relative
 }
 
+#user-menu-button:focus + #user-menu-popup{
+  visibility: visible !important;
+}
+
+#user-menu-popup:hover{
+  visibility: visible !important;
+}
