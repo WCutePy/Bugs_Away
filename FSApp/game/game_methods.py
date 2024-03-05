@@ -108,5 +108,5 @@ def process_click(x, y, hitTarget, targets, gameId):
 
     Click.objects.create(x=x, y=y, frame=1, hit=bool(hitTarget),
                          dx=dx, dy=dy,
-                         user_id=1, game_id=gameId)
+                         user_id=9, game_id=gameId)
 

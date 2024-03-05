@@ -1,12 +1,15 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
 
 # Create your models here.
 
 
-class User(models.Model):
-    username = models.CharField(max_length=30)
-    password = models.CharField(max_length=30)
-    profile_picture = models.IntegerField(default=0)
+class CustomUser(AbstractUser):
+    profile_picture = models.IntegerField()
+
+    def __str__(self):
+        return self.username
 
 
 class Game(models.Model):
@@ -30,5 +33,5 @@ class Click(models.Model):
     dx = models.DecimalField(max_digits=6, decimal_places=3, null=True)
     dy = models.DecimalField(max_digits=6, decimal_places=3, null=True)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)

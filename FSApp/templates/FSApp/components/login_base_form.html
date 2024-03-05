@@ -1,0 +1,53 @@
+{% extends "FSApp/base.html" %}
+
+{% block content %}
+
+<div class="flex flex-col items-center justify-center">
+
+  {% include "FSApp/components/error_box.html" %}
+
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+    <h2 class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">{{ name }}</h2>
+  </div>
+
+  <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
+
+    <form id="login-form" class="" action="#" method="POST">
+
+      {% for name, type, pattern, min, max in form_tags %}
+      <div class="relative z-0 w-full mb-5 group">
+        <input type="{{ type }}" name="{{ name }}" id="{{ name }}" pattern="{{ pattern }}" minlength="{{ min }}"
+               maxlength="{{ max }}" placeholder=" " required
+               class="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-600 appearance-none
+                focus:border-blue-400 focus:outline-none focus:ring-0 peer
+                placeholder-shown:!border-gray-600
+                invalid:border-pink-400
+              " />
+        <label for="{{ name }}" class="peer-focus:font-medium absolute text-sm text-gray-400 duration-200 transform
+                -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+                peer-focus:!text-blue-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100
+                peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6
+                peer-placeholder-shown:!text-gray-300 peer-invalid:text-pink-400
+
+                ">{{ name }}</label>
+      </div>
+      {% endfor %}
+
+      {% block extra-fields %}{% endblock %}
+
+      <div>
+        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6
+        text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
+        focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ button_text }}</button>
+      </div>
+    {% csrf_token %}
+
+
+    </form>
+
+  </div>
+</div>
+
+
+{% endblock %}

@@ -14,9 +14,10 @@
 </head>
 <body class="h-full">
 
-    {% include "FSApp/base_partials/navbar.html" %}
+    <div class="h-screen flex flex-col">
 
-    <div>
+        {% include "FSApp/components/navbar.html" %}
+
         {% block content %}{% endblock %}
     </div>
 

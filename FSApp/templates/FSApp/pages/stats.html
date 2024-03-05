@@ -7,4 +7,11 @@
     <div class="flex justify-center">
         dit is de stats page
     </div>
+{#    {% set my_list = [(1, 2), (3, 4)] %}#}
+{#    {% for a, b in my_list %}#}
+{#      {{ a }} - {{ b }}#}
+{#    {% endfor %}#}
+  {% with firstname="Tobias" %}
+<h1>Hello {{ firstname }}, how are you?</h1>
+{% endwith %}
 {% endblock %}

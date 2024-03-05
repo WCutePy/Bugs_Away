@@ -1,10 +1,16 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from FSApp.models import User
+from FSApp.models import CustomUser
 
 
 try:
-    if User.objects.count() == 0:
-        User.objects.create(username="John", password="Adams")
+    superuser = CustomUser.objects.create(
+        username="admin",
+        is_staff=True,  # Set to True to give staff permissions
+        is_superuser=True,  # Set to True to give superuser permissions
+        profile_picture=0
+    )
+    superuser.set_password("admin")  # Set the password
+    superuser.save()
 except:
     pass
 

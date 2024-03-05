@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-(q1@9xa%5x@(@a4nj3q1gz_=sxu_+!4z2ry6m$230gu^yi#*am
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "FSApp",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -76,12 +78,13 @@ WSGI_APPLICATION = "FrameShooter.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-        'OPTIONS': {
-            'timeout': 20,  # Adjust the timeout as needed
-        },
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'fsapp',
+        'USER': 'fsapp',
+        'PASSWORD': 'fsapp',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -126,3 +129,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = 'FSApp.CustomUser'
+
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+# ]
