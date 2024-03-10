@@ -35,3 +35,13 @@ class Click(models.Model):
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['game'], name="game_idx"),
+        ]
+
+
+class UserPerGame(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)

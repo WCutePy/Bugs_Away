@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "FSApp",
     "debug_toolbar",
+    "django.contrib.humanize"
 ]
 
 MIDDLEWARE = [

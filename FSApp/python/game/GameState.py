@@ -1,5 +1,5 @@
 from threading import Lock
-from FSApp.game.globals import NORMAL_HP
+from FSApp.python.game.globals import NORMAL_HP
 
 
 class GameState:

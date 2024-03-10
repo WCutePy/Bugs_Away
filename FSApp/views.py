@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from re import match
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from FSApp.models import CustomUser
+from FSApp.models import CustomUser, UserPerGame
 from django.contrib import messages
 from random import randint
+from FSApp.python.plots.click_accuracy import click_accuracy_plots
+
+from time import sleep
 
 
 # Create your views here.
@@ -19,7 +22,31 @@ def game_page(request):
 
 
 def stats(request):
-    return render(request, "FSApp/pages/stats.html")
+    user_id = request.user.id
+    user_games = UserPerGame.objects.filter(user_id=user_id).order_by("-game_id")
+
+    game_info = [(user_game.game.id, user_game.game.start_time, ) for user_game in user_games]
+    game_id_1 = game_info[0][0]
+
+
+    context = {"items": game_info}
+    return render(request, "FSApp/pages/stats.html", context)
+
+
+def personal_game_data(request):
+    user_id = request.user.id
+    game_id = request.GET.get("game_id")
+
+    if game_id is None:
+        return HttpResponseBadRequest("Missing 'game_id' parameter")
+
+    accuracy_plots = click_accuracy_plots(user_id, game_id)
+
+    plots = [
+        *accuracy_plots,
+    ]
+
+    return JsonResponse({'plots': plots})
 
 
 def login_view(request):
@@ -84,7 +111,7 @@ def register_view(request):
 
                 login(request, user)
 
-                redirect(game_page)
+                return redirect(game_page)
             except IntegrityError:
                 messages.error(request, f"This username is already taken! try: {request.POST.get('Username')+str(randint(1,9999))}")
 

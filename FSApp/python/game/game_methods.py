@@ -2,20 +2,20 @@ from datetime import datetime
 
 import pytz
 
-from FSApp.game.globals import \
+from FSApp.python.game.globals import \
     activeGames, NORMAL_SPEED, NORMAL_TICKS_PER_MOVE, \
     NORMAL_TICKS_PER_SPAWN, \
     DEATH_BARRIER_PERCENT, TIMEOUT_TICKS, scheduler, SECONDS_PER_UPDATE
-from FSApp.game.GameState import GameState
+from FSApp.python.game.GameState import GameState
 from random import randint
-from FSApp.models import Game, Click
+from FSApp.models import Game, Click, UserPerGame
 
-from time import sleep
 count = 0
 
 
 def createGame():
-    game = Game.objects.create(start_time=datetime.now(pytz.utc))
+    start_time = datetime.now(pytz.utc)
+    game = Game.objects.create(start_time=start_time)
     gameId = game.id
     job = scheduler.add_job(
             updateGameState, "interval", seconds=SECONDS_PER_UPDATE,
@@ -29,7 +29,7 @@ def createGame():
             cGame.targets.append(a)
             cGame.targetId += 1
 
-    return gameId
+    return gameId, start_time
 
 
 def endGameJob(gameId, result=None):
@@ -49,6 +49,11 @@ def endGameJob(gameId, result=None):
 
     game_object.result = result
     game_object.save()
+
+    user_ids = Click.objects.filter(game_id=gameId).values_list('user_id', flat=True).distinct()
+    ids = list(user_ids)
+    if ids:
+        UserPerGame.objects.create(user_id=ids[0], game_id=gameId)
 
 
 def updateGameState(gameId):
@@ -81,7 +86,7 @@ def updateGameState(gameId):
         endGameJob(gameId)
 
 
-def process_click(x, y, hitTarget, targets, gameId):
+def process_click(x, y, hitTarget, targets, gameId, userId):
     closest_target = None
 
     if hitTarget != "":
@@ -91,7 +96,11 @@ def process_click(x, y, hitTarget, targets, gameId):
                 closest_target = tuple(target)
                 target.append("delete")
                 break
-    else:
+
+    if userId is None:
+        return
+
+    if hitTarget == "":
         delta = 200
         for (tx, ty, tId) in targets:
             n_delta = abs(x - tx) + abs(y - ty)
@@ -106,7 +115,7 @@ def process_click(x, y, hitTarget, targets, gameId):
         dx = None
         dy = None
 
-    Click.objects.create(x=x, y=y, frame=1, hit=bool(hitTarget),
+    Click.objects.create(frame=1, x=x, y=y, hit=bool(hitTarget),
                          dx=dx, dy=dy,
-                         user_id=9, game_id=gameId)
+                         user_id=userId, game_id=gameId)
 

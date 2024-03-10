@@ -16,21 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from FrameShooter import settings
 
 from FSApp import views
-from FSApp.game import game_responses
+from FSApp.python.game import game_responses
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
     path("", views.game_page),
     path("stats", views.stats),
+
     path("login", views.login_view),
     path("register", views.register_view),
     path('logout/', views.logout_view, name='logout'),
+
     path(game_responses.get_game_state.__name__, game_responses.get_game_state),
     path(game_responses.start_game.__name__, game_responses.start_game),
     path(game_responses.receive_click.__name__, game_responses.receive_click),
+
+    path('personal_game_data/', views.personal_game_data),
+
     path("__debug__/", include("debug_toolbar.urls")),
 ]
 

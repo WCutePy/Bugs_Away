@@ -1,6 +1,8 @@
 
 let gameId;
 let updateInterval;
+let serverStartTime;
+let serverTimeOffset;
 
 let clicked = null;
 let targetn = 0;
@@ -8,6 +10,11 @@ let targetn = 0;
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;
+}
+
+
+function getSyncedClientTime() {
+    return new Date().getTime() + serverTimeOffset;
 }
 
 
@@ -19,6 +26,14 @@ function clickedStartGame(event){
         method: "GET",
         dataType: "json",
         success: function (data) {
+            // const serverStartTime = new Date(data["serverStartTime"]);
+            //
+            // const serverTimestamp = serverStartTime.getTime();
+            //
+            // const clientTimestamp = new Date().getTime();
+            //
+            // const elapsedTime = clientTimestamp - serverTimestamp;
+
             gameId = data["gameId"];
             requestGameState();
             updateInterval = setInterval(requestGameState, 100);
@@ -91,6 +106,14 @@ function updateGameState(data) {
 
 
 function clickedFrame(event) {
+    let clicked_id = null;
+    let elapsed_time = null;
+
+    if (clicked != null){
+        clicked_id = clicked.id;
+        clicked = null;
+    }
+
     let container = event.currentTarget;
 
     let rect = container.getBoundingClientRect();
@@ -104,25 +127,16 @@ function clickedFrame(event) {
         "gameId": gameId,
         "x": x,
         "y": y,
-        "hitTarget": null
+        "hitTarget": clicked_id
     };
-    
-    if (clicked != null){
-        response["hitTarget"] = clicked.id;
-        clicked = null;
-    }
+
 
     $.ajax({
         url: "receive_click",
         method: "POST",
         dataType: "json",
         data: response,
-        // success: function (data) {
-        
-        // },
-        // error: function (error) {
-        //     console.error("Error in AJAX clicked frame:", error);
-        // }
+
     })
 }
 

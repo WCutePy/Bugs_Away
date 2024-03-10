@@ -2,16 +2,40 @@
 
 {% block title %}Stats{% endblock %}
 
+{% load humanize %}
+
 {% block content %}
-    <br>
-    <div class="flex justify-center">
-        dit is de stats page
+  <aside id="logo-sidebar" class="fixed top-0 left-0 z-10 h-screen pt-14 border-r
+  bg-gray-800 border-gray-700" aria-label="Sidebar">
+   <div class="h-full px-3 pb-4 w-36 overflow-y-auto bg-gray-800">
+      <ul class="space-y-2 font-medium">
+        {% for id, date in items %}
+        <li class="flex justify-center ">
+
+          <button id="{{ id }}" onclick="clickedGameButton(this.id)"
+                  class="flex flex-col items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            >
+            <span>{{ id }}</span>
+            <span>{{ date | naturaltime}}</span>
+          </button>
+
+        </li>
+        {% endfor %}
+      </ul>
+   </div>
+  </aside>
+
+  <div class="ml-36 flex">
+    <div id="plot-1" class="m-10">
+
     </div>
-{#    {% set my_list = [(1, 2), (3, 4)] %}#}
-{#    {% for a, b in my_list %}#}
-{#      {{ a }} - {{ b }}#}
-{#    {% endfor %}#}
-  {% with firstname="Tobias" %}
-<h1>Hello {{ firstname }}, how are you?</h1>
-{% endwith %}
+    <div id="plot-2" class="m-10">
+
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="../../../static/FSApp/js/stats.js"></script>
+
 {% endblock %}
+

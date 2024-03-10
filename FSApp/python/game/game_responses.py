@@ -1,17 +1,15 @@
-from datetime import datetime
 from threading import Thread
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from FSApp.game.GameState import GameState
-from FSApp.game.globals import activeGames, scheduler
-from FSApp.game.game_methods import createGame, process_click
-
+from FSApp.python.game.GameState import GameState
+from FSApp.python.game.globals import activeGames
+from FSApp.python.game.game_methods import createGame, process_click
 
 
 def start_game(request):
-    gameId = createGame()
+    gameId, start_time = createGame()
     request.session["gameId"] = gameId
     return JsonResponse({"gameId": gameId})
 
@@ -40,7 +38,7 @@ def receive_click(request):
     #                   args=(x, y, hitTarget, targets, gameId))
 
     thread = Thread(target=process_click,
-                    args=(x, y, hitTarget, targets, gameId))
+                    args=(x, y, hitTarget, targets, gameId, request.user.id))
     thread.start()
 
     return HttpResponse(status=204)
