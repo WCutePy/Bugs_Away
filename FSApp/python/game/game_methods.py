@@ -10,6 +10,8 @@ from FSApp.python.game.GameState import GameState
 from random import randint
 from FSApp.models import Game, Click, UserPerGame
 
+from datetime import timedelta
+
 count = 0
 
 
@@ -20,11 +22,12 @@ def createGame():
     job = scheduler.add_job(
             updateGameState, "interval", seconds=SECONDS_PER_UPDATE,
             id=str(gameId), args=(gameId,))
-    activeGames[gameId] = GameState(gameId, job)
+    activeGames[gameId] = GameState(gameId, job, start_time)
     cGame: GameState = activeGames[gameId]
     with cGame.lock:
         for i, a in enumerate(
-                ([5, 15, 0], [59, 17, 1], [40, 50, 2], [50, 39, 3])
+                ([5, 15, 0, timedelta(0)], [59, 17, 1, timedelta(0)],
+                 [40, 50, 2, timedelta(0)], [50, 39, 3, timedelta(0)])
         ):
             cGame.targets.append(a)
             cGame.targetId += 1
@@ -69,11 +72,13 @@ def updateGameState(gameId):
             cGame.targets.append(
                 [randint(5, 95),
                  randint(5, 45),
-                 cGame.targetId]
+                 cGame.targetId,
+                 datetime.now(pytz.utc) - cGame.start_time
+                 ]
             )
             cGame.targetId += 1
         for target in cGame.targets[:]:
-            if len(target) > 3:
+            if len(target) > 4:
                 cGame.targets.remove(target)
                 cGame.kills += 1
             if target[1] > DEATH_BARRIER_PERCENT:
@@ -86,14 +91,21 @@ def updateGameState(gameId):
         endGameJob(gameId)
 
 
-def process_click(x, y, hitTarget, targets, gameId, userId):
+def process_click(x, y, hitTarget, targets, elapsed_time, gameId, userId):
     closest_target = None
+    target_spawned_at = None
+
+    file = open("error.txt", "a")
 
     if hitTarget != "":
         hitCompare = int(hitTarget.strip("target"))
         for target in targets:
-            if target[-1] == hitCompare:
+            if target[2] == hitCompare:
                 closest_target = tuple(target)
+                target_spawned_at = target[3]
+
+                file.write(f"{target_spawned_at} {type(target_spawned_at)}\n")
+
                 target.append("delete")
                 break
 
@@ -102,7 +114,7 @@ def process_click(x, y, hitTarget, targets, gameId, userId):
 
     if hitTarget == "":
         delta = 200
-        for (tx, ty, tId) in targets:
+        for (tx, ty, tId, *_) in targets:
             n_delta = abs(x - tx) + abs(y - ty)
             if delta > n_delta:
                 closest_target = (tx, ty, tId)
@@ -110,12 +122,22 @@ def process_click(x, y, hitTarget, targets, gameId, userId):
 
     if closest_target is not None:
         dx = x - closest_target[0]
-        dy = y - closest_target[1]
+        dy = closest_target[1] - y
     else:
         dx = None
         dy = None
 
+    elapsed_time = timedelta(seconds=int(elapsed_time) / 1000)
+    elapsed_time_since_target_spawn = None
+    if target_spawned_at is not None:
+        elapsed_time_since_target_spawn = elapsed_time - target_spawned_at
+        file.write(f"{elapsed_time_since_target_spawn} {type(elapsed_time_since_target_spawn)}\n")
+    file.write("\n")
+    file.close()
+
     Click.objects.create(frame=1, x=x, y=y, hit=bool(hitTarget),
                          dx=dx, dy=dy,
+                         elapsed_time_since_start=elapsed_time,
+                         elapsed_time_since_target_spawn=elapsed_time_since_target_spawn,
                          user_id=userId, game_id=gameId)
 

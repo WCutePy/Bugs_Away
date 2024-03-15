@@ -2,10 +2,12 @@
 let gameId;
 let updateInterval;
 let serverStartTime;
+let clientStartTime;
 let serverTimeOffset;
 
 let clicked = null;
-let targetn = 0;
+
+let intervalTime = 25;
 
 
 function getRndInteger(min, max) {
@@ -13,8 +15,8 @@ function getRndInteger(min, max) {
 }
 
 
-function getSyncedClientTime() {
-    return new Date().getTime() + serverTimeOffset;
+function timeSinceStart(){
+    return new Date() - clientStartTime;
 }
 
 
@@ -26,17 +28,13 @@ function clickedStartGame(event){
         method: "GET",
         dataType: "json",
         success: function (data) {
-            // const serverStartTime = new Date(data["serverStartTime"]);
-            //
-            // const serverTimestamp = serverStartTime.getTime();
-            //
-            // const clientTimestamp = new Date().getTime();
-            //
-            // const elapsedTime = clientTimestamp - serverTimestamp;
+            serverStartTime = new Date(data["startTime"]);
+
+            clientStartTime = new Date();
 
             gameId = data["gameId"];
             requestGameState();
-            updateInterval = setInterval(requestGameState, 100);
+            updateInterval = setInterval(requestGameState, intervalTime);
             // requestAnimationFrame(requestGameState);
         },
         error: function (error) {
@@ -107,7 +105,7 @@ function updateGameState(data) {
 
 function clickedFrame(event) {
     let clicked_id = null;
-    let elapsed_time = null;
+    let elapsed_time = timeSinceStart();
 
     if (clicked != null){
         clicked_id = clicked.id;
@@ -127,7 +125,8 @@ function clickedFrame(event) {
         "gameId": gameId,
         "x": x,
         "y": y,
-        "hitTarget": clicked_id
+        "hitTarget": clicked_id,
+        "elapsedTime": elapsed_time
     };
 
 
@@ -136,7 +135,6 @@ function clickedFrame(event) {
         method: "POST",
         dataType: "json",
         data: response,
-
     })
 }
 

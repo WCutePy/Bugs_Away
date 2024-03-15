@@ -5,9 +5,10 @@
 {% load humanize %}
 
 {% block content %}
-  <aside id="logo-sidebar" class="fixed top-0 left-0 z-10 h-screen pt-14 border-r
-  bg-gray-800 border-gray-700" aria-label="Sidebar">
-   <div class="h-full px-3 pb-4 w-36 overflow-y-auto bg-gray-800">
+  <div>
+  <aside id="logo-sidebar" class="fixed top-0 left-0 z-10 h-screen mt-12 border-r
+  bg-gray-800 border-gray-700 w-36" aria-label="Sidebar">
+   <div class="h-full px-3 pb-4 overflow-y-auto bg-gray-800">
       <ul class="space-y-2 font-medium">
         {% for id, date in items %}
         <li class="flex justify-center ">
@@ -25,14 +26,23 @@
    </div>
   </aside>
 
-  <div class="ml-36 flex">
-    <div id="plot-1" class="m-10">
+  <div class="ml-36 max-w-[calc(100%-9rem)] p-10 ">
+    <div class="flex flex-row">
+      <div id="plot-1" class="w-1/2">
+
+      </div>
+      <div id="plot-2" class="w-1/2">
+
+      </div>
+    </div>
+    <div id="plot-3" class="py-4">
 
     </div>
-    <div id="plot-2" class="m-10">
+    <div id="plot-4" class="py-4">
 
     </div>
   </div>
+</div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   <script src="../../../static/FSApp/js/stats.js"></script>

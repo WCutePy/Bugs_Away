@@ -7,11 +7,17 @@ from FSApp.python.game.GameState import GameState
 from FSApp.python.game.globals import activeGames
 from FSApp.python.game.game_methods import createGame, process_click
 
+from datetime import timedelta
+
 
 def start_game(request):
     gameId, start_time = createGame()
     request.session["gameId"] = gameId
-    return JsonResponse({"gameId": gameId})
+    return JsonResponse(
+        {"gameId": gameId,
+         "startTime": start_time
+         }
+    )
 
 
 def get_game_state(request):
@@ -32,15 +38,15 @@ def receive_click(request):
     data = request.POST
     cGame: GameState = activeGames[gameId]
     x, y, hitTarget = float(data["x"]), float(data["y"]), data["hitTarget"]
+    elapsed_time = data["elapsedTime"]
     targets = cGame.targets[:]
 
-    # scheduler.add_job(process_click, "date", run_date=datetime.now(),
-    #                   args=(x, y, hitTarget, targets, gameId))
+    # thread = Thread(target=process_click,
+    #                 args=(x, y, hitTarget, targets, elapsed_time, gameId,
+    #                       request.user.id))
+    # thread.start()
 
-    thread = Thread(target=process_click,
-                    args=(x, y, hitTarget, targets, gameId, request.user.id))
-    thread.start()
+    process_click(x, y, hitTarget, targets, elapsed_time, gameId,
+                  request.user.id)
 
     return HttpResponse(status=204)
-
-

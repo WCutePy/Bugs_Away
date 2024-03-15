@@ -3,7 +3,7 @@ from FSApp.python.game.globals import NORMAL_HP
 
 
 class GameState:
-    def __init__(self, gameId, job):
+    def __init__(self, gameId, job, start_time):
         self.id = gameId
         self.lock = Lock()
         self.targets = []
@@ -15,3 +15,5 @@ class GameState:
         self.kills = 0
 
         self.terminate = False
+
+        self.start_time = start_time

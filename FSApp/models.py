@@ -33,6 +33,9 @@ class Click(models.Model):
     dx = models.DecimalField(max_digits=6, decimal_places=3, null=True)
     dy = models.DecimalField(max_digits=6, decimal_places=3, null=True)
 
+    elapsed_time_since_start = models.DurationField(null=True)
+    elapsed_time_since_target_spawn = models.DurationField(null=True)
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
 

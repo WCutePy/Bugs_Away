@@ -836,10 +836,6 @@ select {
   z-index: 50;
 }
 
-.m-10 {
-  margin: 2.5rem;
-}
-
 .-mx-1 {
   margin-left: -0.25rem;
   margin-right: -0.25rem;
@@ -891,6 +887,14 @@ select {
 
 .ms-auto {
   margin-inline-start: auto;
+}
+
+.mt-12 {
+  margin-top: 3rem;
+}
+
+.mt-14 {
+  margin-top: 3.5rem;
 }
 
 .mt-2 {
@@ -957,6 +961,10 @@ select {
   height: 100vh;
 }
 
+.w-1\/2 {
+  width: 50%;
+}
+
 .w-3 {
   width: 0.75rem;
 }
@@ -991,6 +999,10 @@ select {
 
 .min-w-16 {
   min-width: 4rem;
+}
+
+.max-w-\[calc\(100\%-9rem\)\] {
+  max-width: calc(100% - 9rem);
 }
 
 .flex-1 {
@@ -1044,6 +1056,10 @@ select {
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.flex-row {
+  flex-direction: row;
 }
 
 .flex-col {
@@ -1195,6 +1211,10 @@ select {
   padding: 0.25rem;
 }
 
+.p-10 {
+  padding: 2.5rem;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -1248,6 +1268,11 @@ select {
   padding-bottom: 0.625rem;
 }
 
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -1263,10 +1288,6 @@ select {
 
 .pr-2 {
   padding-right: 0.5rem;
-}
-
-.pt-14 {
-  padding-top: 3.5rem;
 }
 
 .pt-2 {

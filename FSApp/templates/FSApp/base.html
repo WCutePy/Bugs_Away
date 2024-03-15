@@ -12,13 +12,14 @@
     {% block headerJS %}{% endblock %}
     {% block headerCSS %}{% endblock %}
 </head>
-<body class="h-full">
+<body class="">
 
-    <div class="h-screen flex flex-col">
-
+    <div>
         {% include "FSApp/components/navbar.html" %}
 
+        <div class="relative mt-12">
         {% block content %}{% endblock %}
+        </div>
     </div>
 
 </body>
