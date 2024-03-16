@@ -2,6 +2,7 @@ from FSApp.python.plots.default_layout import apply_default_layout
 import plotly.graph_objects as go
 
 
+
 def create_accuracy_dotplots(dx_hit, dy_hit, dx_miss, dy_miss):
     plots = []
 
@@ -49,7 +50,6 @@ def create_accuracy_dotplots(dx_hit, dy_hit, dx_miss, dy_miss):
                           )
 
         axis = dict(
-            title='dx',
             range=(-size_range, size_range),
             zeroline=False,
             tickvals=ticks,
@@ -61,6 +61,8 @@ def create_accuracy_dotplots(dx_hit, dy_hit, dx_miss, dy_miss):
             ),
             xaxis=axis,
             yaxis=axis,
+            xaxis_title="dx",
+            yaxis_title="dy"
         )
 
         plots.append(fig)

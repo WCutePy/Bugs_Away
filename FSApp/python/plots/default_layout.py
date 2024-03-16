@@ -23,6 +23,8 @@ def apply_default_layout(fig):
             bgcolor='rgba(0,0,0,0)',
         ),
 
+        dragmode=False,
+        clickmode="none",
     )
     fig.update_layout(**default_layout)
     fig.update_traces(

@@ -6,6 +6,7 @@ from datetime import timedelta
 from FSApp.python.plots.click_accuracy_dotplot import create_accuracy_dotplots
 from FSApp.python.plots.click_delta_histogram import create_delta_histogram
 from FSApp.python.plots.clicks_replay import create_replay
+from pandas import DataFrame
 
 
 def game_plots(user_id, game_id):
@@ -22,17 +23,16 @@ def game_plots(user_id, game_id):
     dx_miss = []
     dy_miss = []
 
-    x = []
-    y = []
     time = []
 
     delta_time_target_hit = []
+
+    all_clicks = []
 
     for click in clicks:
         if click["hit"] is True:
             dx_hit.append(click["dx"])
             dy_hit.append(click["dy"])
-
 
             delta_time_target_hit.append(
                 click["elapsed_time_since_target_spawn"] / timedelta(seconds=1)
@@ -42,9 +42,17 @@ def game_plots(user_id, game_id):
             dx_miss.append(click["dx"])
             dy_miss.append(click["dy"])
 
-        x.append(click["x"])
-        y.append(click["y"])
-        time.append(click["elapsed_time_since_start"].total_seconds())
+        all_clicks.append((
+            click["x"],
+            click["y"],
+            click["hit"],
+            click["dx"],
+            click["dy"],
+            click["elapsed_time_since_start"].total_seconds()
+        ))
+
+    click_data = DataFrame(all_clicks, columns=("x", "y", "hit", "dx", "dy",
+                                                "time"))
 
     plots = []
 
@@ -52,9 +60,9 @@ def game_plots(user_id, game_id):
 
     plots.append(create_delta_histogram(delta_time_target_hit))
 
-    plots.append(create_replay(x, y, time))
+    plots.append(create_replay(click_data))
 
-    config=dict(
+    config = dict(
         displayModeBar=False,
         editable=False,
         scrollZoom=False,
@@ -64,8 +72,8 @@ def game_plots(user_id, game_id):
     )
 
     html = (
-        fig.to_html(full_html=False, config=config) for fig in plots
+        fig.to_html(
+            full_html=False, config=config, auto_play=False
+        ) for fig in plots
     )
     return html
-
-
