@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from FSApp.models import CustomUser, UserPerGame
 from django.contrib import messages
 from random import randint
-from FSApp.python.plots.game_plots import game_plots
+from FSApp.utils.plots.game_plots import game_plots, game_replay
 
 from time import sleep
 
@@ -40,13 +40,21 @@ def personal_game_data(request):
     if game_id is None:
         return HttpResponseBadRequest("Missing 'game_id' parameter")
 
-    accuracy_plots = game_plots(user_id, game_id)
+    html_plots, aggregate_info = game_plots(user_id, game_id)
 
-    plots = [
-        *accuracy_plots,
-    ]
+    return JsonResponse({'plots': html_plots, "info": aggregate_info})
 
-    return JsonResponse({'plots': plots})
+
+def get_replay(request):
+    user_id = request.user.id
+    game_id = request.GET.get("game_id")
+
+    if game_id is None:
+        return HttpResponseBadRequest("Missing 'game_id' parameter")
+
+    replay = game_replay(user_id, game_id)
+
+    return JsonResponse({"replay": replay})
 
 
 def login_view(request):

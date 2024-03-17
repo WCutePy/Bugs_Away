@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from FSApp import views
-from FSApp.python.game import game_responses
+from FSApp.utils.game import game_responses
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -35,6 +35,7 @@ urlpatterns = [
     path(game_responses.receive_click.__name__, game_responses.receive_click),
 
     path('personal_game_data/', views.personal_game_data),
+    path('get_replay/', views.get_replay),
 
     path("__debug__/", include("debug_toolbar.urls")),
 ]

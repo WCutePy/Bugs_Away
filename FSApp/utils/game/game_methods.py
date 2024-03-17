@@ -2,11 +2,11 @@ from datetime import datetime
 
 import pytz
 
-from FSApp.python.game.globals import \
+from FSApp.utils.game.globals import \
     activeGames, NORMAL_SPEED, NORMAL_TICKS_PER_MOVE, \
     NORMAL_TICKS_PER_SPAWN, \
     DEATH_BARRIER_PERCENT, TIMEOUT_TICKS, scheduler, SECONDS_PER_UPDATE
-from FSApp.python.game.GameState import GameState
+from FSApp.utils.game.GameState import GameState
 from random import randint
 from FSApp.models import Game, Click, UserPerGame
 

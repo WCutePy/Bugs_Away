@@ -1,15 +1,20 @@
-from FSApp.python.plots.default_layout import apply_default_layout
+from FSApp.utils.plots.default_layout import apply_default_layout
 import plotly.graph_objects as go
+import pandas as pd
 
 
-
-def create_accuracy_dotplots(dx_hit, dy_hit, dx_miss, dy_miss):
+def create_accuracy_dotplots(click_data: pd.DataFrame):
     plots = []
 
+    hit = click_data[click_data["hit"] == True]
+    miss = click_data[click_data["hit"] == False]
+
     dotplot_vars = (
-        ("Distance from the middle of the target on hit", dx_hit, dy_hit, 7.5,
+        ("Distance from the middle of the target on hit",
+         hit["dx"], hit["dy"], 7.5,
          (-5, 0, 5),),
-        ("Distance from the target on a miss", dx_miss, dy_miss, 35,
+        ("Distance from the target on a miss",
+         miss["dx"], miss["dy"], 35,
          (-25, 0, 25),)
     )
     for title, dx, dy, size_range, ticks in dotplot_vars:
@@ -54,6 +59,7 @@ def create_accuracy_dotplots(dx_hit, dy_hit, dx_miss, dy_miss):
             zeroline=False,
             tickvals=ticks,
             showgrid=False,
+            # showspikes=True,
         )
         fig.update_layout(
             title=dict(

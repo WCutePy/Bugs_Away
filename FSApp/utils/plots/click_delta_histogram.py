@@ -1,15 +1,17 @@
-from FSApp.python.plots.default_layout import apply_default_layout
+from FSApp.utils.plots.default_layout import apply_default_layout
 import plotly.graph_objects as go
 import numpy as np
 
 
-def create_delta_histogram(delta_time_target):
+def create_delta_histogram(click_data):
 
     bin_boundaries = [0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0,
                       1.2, 1.4, 1.6, 1.8, 2.0, 2.5, 3.0, 3.5, 4.0]
     bin_boundaries = np.arange(0, 4, 0.2)
 
-    hist, bins = np.histogram(delta_time_target, bins=bin_boundaries)
+    df = click_data[click_data["hit"] == True]
+
+    hist, bins = np.histogram(df["delta_time_target"], bins=bin_boundaries)
 
     hover_text = [f'{bins[i]:.2f}-{bins[i + 1]:.2f}: {hist[i]}' for i in
                   range(len(hist))]

@@ -27,8 +27,12 @@ def apply_default_layout(fig):
         clickmode="none",
     )
     fig.update_layout(**default_layout)
-    fig.update_traces(
-        marker=dict(
-            color="rgb(59, 130, 246)",
+
+    try:
+        fig.update_traces(
+            marker=dict(
+                color="rgb(59, 130, 246)",
+            )
         )
-    )
+    except ValueError:
+        pass

@@ -3,9 +3,9 @@ from threading import Thread
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from FSApp.python.game.GameState import GameState
-from FSApp.python.game.globals import activeGames
-from FSApp.python.game.game_methods import createGame, process_click
+from FSApp.utils.game.GameState import GameState
+from FSApp.utils.game.globals import activeGames
+from FSApp.utils.game.game_methods import createGame, process_click
 
 from datetime import timedelta
 
