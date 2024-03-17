@@ -1,10 +1,11 @@
 ### Todo
 
-- [ ] have the javascript interval stop at end
-- [ ] html Login page
-- [ ] PY login session + SQL Player table
-- [ ] html Game summary page, includes table
-- [ ] PY generate game_page summary page graphs
+- [ ] cleanup nav bar, display username
+- [ ] make game better
+- [ ] put login in a proper place
+- [ ] profile icon??
+- [ ] game icon on top left and on page icon
+- [ ] have a file export, probably stats
 
 ### In Progress
 
@@ -26,3 +27,10 @@
 - [x] PY send data to SQL table Click and Game
 - [x] create death trigger
 - [x] hp count and kill count
+- [x] have the javascript interval stop at end
+- [x] html Login page
+- [x] PY login session + SQL Player table
+- [x] html Game summary page, includes table
+- [x] PY generate game_page summary page graphs
+- [x] stats remove js from plots
+- [x] have stats not crash if no games

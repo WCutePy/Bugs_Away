@@ -11,9 +11,6 @@ import pandas as pd
 
 def create_replay(click_data: pd.DataFrame):
     pd.options.mode.chained_assignment = None
-    file = open("error.txt", "w")
-
-    file.write(str(click_data) + "\n")
 
     interval = 0.05  # seconds
     sigma = 0.25
@@ -35,7 +32,7 @@ def create_replay(click_data: pd.DataFrame):
             (click_data["time"] > t - sigma) & (click_data["time"] < t + sigma)
             ]
 
-        current_data['offset'] = np.abs(current_data['time'] - t)
+        # current_data['offset'] = np.abs(current_data['time'] - t)
         # current_data['size'] = (max_size *
         #                         (1 - (current_data['offset'] / sigma)))
         # index = np.round((sizes.size - 1) *
@@ -49,13 +46,9 @@ def create_replay(click_data: pd.DataFrame):
 
 
             current_data = click_data.iloc[[0]]
-            current_data['x'] = 0
-            current_data['y'] = 0
             current_data['size'] = 0
             current_data['original_index'] = -1
-            file.write(f"jo this shits was empty {current_data} \n\n")
         current_data['t'] = t
-
 
         full_dataframe = pd.concat((full_dataframe, current_data),
                                    ignore_index=True)
@@ -64,10 +57,6 @@ def create_replay(click_data: pd.DataFrame):
 
     mapping = {True: 0, False: 1}
     full_dataframe["color"] = full_dataframe["hit"].map(mapping)
-
-    file.write(str(full_dataframe))
-
-    full_dataframe.to_csv("df")
 
     colors = ("rgb(59, 130, 246)", "red")
     hit_color, miss_color = colors
@@ -107,7 +96,7 @@ def create_replay(click_data: pd.DataFrame):
             mode="immediate",
             fromcurrent=True,
             transition=dict(
-                duration=0,
+                duration=duration,
                 # easing="linear"
             ),
         )

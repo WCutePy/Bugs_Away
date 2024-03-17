@@ -1,7 +1,4 @@
-from django.shortcuts import render
-import plotly.graph_objects as go
-from FSApp.models import Click
-from plotly.offline import plot
+from FSApp.models import Click, Game
 from datetime import timedelta
 from FSApp.utils.plots.click_accuracy_dotplot import create_accuracy_dotplots
 from FSApp.utils.plots.click_delta_histogram import create_delta_histogram
@@ -15,7 +12,18 @@ from pandas import DataFrame
 # todo optimize not sending js for every plot
 
 
-def get_game_data(user_id, game_id) -> DataFrame:
+def get_game_data(user_id, game_id):
+    games = Game.objects.filter(
+        id=game_id).values(
+        "start_time",
+        "end_time"
+    )
+
+    game_info = [
+        (game["start_time"], game["end_time"] - game["start_time"])
+        for game in games
+    ]
+
     clicks = Click.objects.filter(
         user_id=user_id, game_id=game_id,
         dx__isnull=False).values(
@@ -31,7 +39,7 @@ def get_game_data(user_id, game_id) -> DataFrame:
         delta_time_target = None
         if click["hit"] is True:
             delta_time_target = click["elapsed_time_since_target_spawn"] \
-                                 / timedelta(seconds=1)
+                                / timedelta(seconds=1)
 
         all_clicks.append((
             click["x"],
@@ -43,8 +51,14 @@ def get_game_data(user_id, game_id) -> DataFrame:
             delta_time_target,
         ))
 
-    return DataFrame(all_clicks, columns=("x", "y", "hit", "dx", "dy",
-                                          "time", "delta_time_target"))
+    df = DataFrame(
+        all_clicks,
+        columns=(
+            "x", "y", "hit", "dx", "dy", "time", "delta_time_target"
+        ),
+    )
+
+    return df, game_info
 
 
 def plots_to_html(plots):
@@ -58,38 +72,18 @@ def plots_to_html(plots):
     )
     return [
         fig.to_html(
-            full_html=False, config=config, auto_play=False
+            full_html=False, config=config, auto_play=False,
+            include_plotlyjs=False,
         ) for fig in plots
     ]
 
 
 def game_plots(user_id, game_id):
-    click_data = get_game_data(user_id, game_id)
-
-    hit_data = click_data[click_data["hit"] == True]
-    miss_data = click_data[click_data["hit"] == False]
-
-    p = 1 # precision
-    aggregate_info = {
-        "total": len(click_data),
-        "hit_amount": len(hit_data),
-        "hit_mean": (round(hit_data["dx"].mean(), p),
-                     round(hit_data["dy"].mean(), p)),
-        "hit_median": (round(hit_data["dx"].median(), p),
-                       round(hit_data["dy"].median(), p)),
-        "hit_interval_mean": round(hit_data["delta_time_target"].mean(), p),
-        "hit_interval_median": round(hit_data["delta_time_target"].median(), p),
-        "miss_amount": len(miss_data),
-        "miss_mean": (round(miss_data["dx"].mean(), p),
-                      round(miss_data["dy"].mean(), p)),
-        "miss_median": (round(miss_data["dx"].median()),
-                        round(miss_data["dy"].median())),
-        "accuracy": f"{round(len(hit_data) / len(click_data) * 100, p)} %",
-    }
+    click_data, game_info = get_game_data(user_id, game_id)
 
     plots = []
 
-    plots.append(click_table(aggregate_info))
+    plots.append(click_table(click_data, game_info))
 
     plots.extend(create_accuracy_dotplots(click_data))
 
@@ -97,13 +91,12 @@ def game_plots(user_id, game_id):
 
     html = plots_to_html(plots)
 
-
-    return html, aggregate_info
+    return html
 
 
 def game_replay(user_id, game_id, click_data=None):
     if click_data is None:
-        click_data = get_game_data(user_id, game_id)
+        click_data, _ = get_game_data(user_id, game_id)
 
     replay = create_replay(click_data)
 

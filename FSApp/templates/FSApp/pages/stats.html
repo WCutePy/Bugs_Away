@@ -26,20 +26,45 @@
    </div>
   </aside>
 
-  <div class="ml-36 max-w-[calc(100%-9rem)] p-10 ">
-    <div id="plot-1" class="py-4">
+  <div class="ml-36 max-w-[calc(100%-9rem)] px-10">
+
+    {% include "FSApp/components/error_box.html" %}
+
+    <div class="pt-4">
 
     </div>
 
-    <div class="flex flex-row">
-      <div id="plot-2" class="w-1/2">
+    <div id="plot-1" class=" py-4 max-w-[1200px] mx-auto">
+
+    </div>
+
+    <div class="flex flex-row justify-center">
+      <div class="w-20">
 
       </div>
-      <div id="plot-3" class="w-1/2">
+      <div class="">
+        <div id="plot-2" class="">
 
+        </div>
+        <div id="plot-3" class="hidden">
+
+        </div>
+      </div>
+      <div id="dotplot-menu" class="mt-6 invisible w-20">
+        <div class="flex items-center mb-4">
+          <input checked id="radio-1" type="radio" value="1" name="default-radio" onclick="togglePlot(this)"
+                 class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+          <label for="radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Hits</label>
+        </div>
+        <div class="flex items-center">
+          <input id="radio-2" type="radio" value="2" name="default-radio" onclick="togglePlot(this)"
+                 class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+          <label for="radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Misses</label>
+        </div>
       </div>
     </div>
-    <div id="plot-4" class="py-4">
+
+    <div id="plot-4" class="py-4 max-w-[1169px] mx-auto">
 
     </div>
     <div id="replay" class="py-4 flex justify-center">
@@ -61,11 +86,13 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
+
   </div>
 </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   <script src="../../../static/FSApp/js/stats.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
 
 {% endblock %}
 

@@ -3,6 +3,8 @@ import plotly.graph_objects as go
 import pandas as pd
 
 
+#todo make the two line up, cuz it doesn't look good when switching quickly rn
+
 def create_accuracy_dotplots(click_data: pd.DataFrame):
     plots = []
 
@@ -14,7 +16,7 @@ def create_accuracy_dotplots(click_data: pd.DataFrame):
          hit["dx"], hit["dy"], 7.5,
          (-5, 0, 5),),
         ("Distance from the target on a miss",
-         miss["dx"], miss["dy"], 35,
+         miss["dx"], miss["dy"], 37.5,
          (-25, 0, 25),)
     )
     for title, dx, dy, size_range, ticks in dotplot_vars:
@@ -53,11 +55,15 @@ def create_accuracy_dotplots(click_data: pd.DataFrame):
                           line=dict(color="red", width=2),
                           layer="below",
                           )
+        # tick_text = [(3 - len(str(num))) * "a" + str(num) for num in ticks]
 
         axis = dict(
             range=(-size_range, size_range),
+            minallowed=-size_range,
+            maxallowed=size_range,
             zeroline=False,
             tickvals=ticks,
+            # ticktext=tick_text,
             showgrid=False,
             # showspikes=True,
         )
@@ -65,10 +71,14 @@ def create_accuracy_dotplots(click_data: pd.DataFrame):
             title=dict(
                 text=title,
             ),
+
             xaxis=axis,
             yaxis=axis,
             xaxis_title="dx",
-            yaxis_title="dy"
+            yaxis_title="dy",
+            yaxis_scaleanchor="x",
+            width = 600,
+            height= 500,
         )
 
         plots.append(fig)

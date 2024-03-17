@@ -26,10 +26,14 @@ def stats(request):
     user_games = UserPerGame.objects.filter(user_id=user_id).order_by("-game_id")
 
     game_info = [(user_game.game.id, user_game.game.start_time, ) for user_game in user_games]
-    game_id_1 = game_info[0][0]
 
+    if user_id is None:
+        messages.error(request, "Please login")
+    elif len(game_info) == 0:
+        messages.error(request, "Please play some games ")
 
     context = {"items": game_info}
+
     return render(request, "FSApp/pages/stats.html", context)
 
 
@@ -40,9 +44,9 @@ def personal_game_data(request):
     if game_id is None:
         return HttpResponseBadRequest("Missing 'game_id' parameter")
 
-    html_plots, aggregate_info = game_plots(user_id, game_id)
+    html_plots = game_plots(user_id, game_id)
 
-    return JsonResponse({'plots': html_plots, "info": aggregate_info})
+    return JsonResponse({'plots': html_plots})
 
 
 def get_replay(request):
