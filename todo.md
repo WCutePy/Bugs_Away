@@ -1,11 +1,13 @@
 ### Todo
 
-- [ ] fix dotplot x y axis scale not the same ???
+- [ ] if console is closed, game is choppy and will sometimes not render
 - [ ] make game better
-- [ ] fix bug in game that has not all images render at all times
 - [ ] have a file export, probably stats
 - [ ] add reset button to game
 - [ ] make end of game look good
+
+- [ ] make stat left bar look good
+- [ ] have profile icon on the register
 
 ### In Progress
 
@@ -40,3 +42,8 @@
 - [x] put login in a proper place
 - [x] game icon on top left and on page icon - AAAAANTS
 - [x] add timer to game
+- [x] fix dotplot x y axis scale not the same ???
+- [x] input types are probably done already :)
+- [x] have logo on login rotate
+- [x] have error bar not overlap with logo on failed login
+- [x] cancel replay if user switches games - should be fixed

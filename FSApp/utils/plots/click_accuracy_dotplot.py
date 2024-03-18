@@ -12,10 +12,10 @@ def create_accuracy_dotplots(click_data: pd.DataFrame):
     miss = click_data[click_data["hit"] == False]
 
     dotplot_vars = (
-        ("Distance from the middle of the target on hit",
+        ("Distance from the middle of the target hit",
          hit["dx"], hit["dy"], 7.5,
          (-5, 0, 5),),
-        ("Distance from the target on a miss",
+        ("Distance from the closest target",
          miss["dx"], miss["dy"], 37.5,
          (-25, 0, 25),)
     )
@@ -74,10 +74,10 @@ def create_accuracy_dotplots(click_data: pd.DataFrame):
 
             xaxis=axis,
             yaxis=axis,
-            xaxis_title="dx",
-            yaxis_title="dy",
+            xaxis_title="dx (%)",
+            yaxis_title="dy (%)",
             yaxis_scaleanchor="x",
-            width = 600,
+            width = 500,
             height= 500,
         )
 

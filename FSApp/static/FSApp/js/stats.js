@@ -17,6 +17,8 @@ function clickedGameButton(gameId) {
         for (let i = 0; i < 10; i++) {
             $(`#plot-${i + 1}`).html("");
         }
+        $(`#replay`).html("");
+
         replayRequestText.classList.replace("visible", "invisible");
         dotplotMenu.classList.replace("visible", "invisible");
         waitingElement.classList.replace("invisible", "visible");
@@ -33,8 +35,6 @@ function clickedGameButton(gameId) {
                 waitingElement.classList.replace("visible", "invisible");
 
                 current = gameId;
-
-                $(`#replay`).html("");
 
                 const plots = response.plots;
                 for (let i = 0; i < plots.length; i++) {
@@ -67,11 +67,18 @@ function getReplay(gameId) {
         type: 'GET',
         dataType: 'json',
         success: function(response) {
+            if (gameId !== current){
+                return
+            }
 
             const replay = response.replay;
             $(`#replay`).html(replay);
 
             waitingElement.classList.replace("visible", "invisible");
+
+            if (gameId !== current){
+                $(`#replay`).html("");
+            }
         },
         error: function(error) {
             console.error('Error fetching replay:', error);

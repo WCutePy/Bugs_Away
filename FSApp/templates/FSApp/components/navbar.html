@@ -34,7 +34,7 @@
 
       <div class="flex flex-1 justify-center sm:items-stretch sm:justify-start">
         <div class="flex flex-shrink-0 items-center">
-          <img class="p-1 h-12 w-auto" src="{% static "FSApp/img/logo.png" %}" alt="logo">
+          <img class="p-1 h-12 w-auto hover:animate-[spin_1s_linear_infinite]" src="{% static "FSApp/img/logo.png" %}" alt="logo">
         </div>
         <div class="hidden sm:ml-6 sm:block items-end">
           <div class="flex space-x-4 py-4">
@@ -62,14 +62,15 @@
         <!-- Profile dropdown -->
         <div class="relative ml-3">
           <div>
-            <button type="button" class="peer relative flex rounded-full bg-gray-800
+            <button type="button" class="peer group relative flex rounded-full bg-gray-800
             text-sm hover:outline-none hover:ring-2 hover:ring-white
             hover:ring-offset-2 hover:ring-offset-gray-800"
             id="user-menu-button"
             aria-owns="user-menu-popup" aria-expanded="false" aria-haspopup="true">
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">Open user menu</span>
-              <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              <img class="h-8 w-8 rounded-full group-hover:animate-[spin_5s_linear_infinite]"
+                   src="{% static "FSApp/img/kale.jpg" %}" alt="">
             </button>
 
             <!--
@@ -82,17 +83,17 @@
               From: "transform opacity-100 scale-100"
               To: "transform opacity-0 scale-95"
           -->
-
+            {% if request.user.is_authenticated %}
             <div id="user-menu-popup" class="absolute right-0 z-10 mt-2 origin-top-right
             rounded-md py-1 shadow-lg ring-1 ring-black bg-neutral-700 invisible
             ring-opacity-5 focus:outline-none w-32 hover:!visible delay-100
-            peer-hover:!visible
-            "
+            peer-hover:!visible"
                  role="menu"
                  aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
               <a href="/logout" class="block px-4 py-2 text-sm text-white"
                  role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
             </div>
+            {% endif %}
           </div>
 
 
