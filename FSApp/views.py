@@ -128,3 +128,7 @@ def register_view(request):
                 messages.error(request, f"This username is already taken! try: {request.POST.get('Username')+str(randint(1,9999))}")
 
     return render(request, "FSApp/pages/register.html", context)
+
+
+def test(request):
+    return render(request, "FSApp/pages/test.html")

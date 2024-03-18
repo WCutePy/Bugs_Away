@@ -38,5 +38,7 @@ urlpatterns = [
     path('get_replay/', views.get_replay),
 
     path("__debug__/", include("debug_toolbar.urls")),
+
+    path("test", views.test)
 ]
 
