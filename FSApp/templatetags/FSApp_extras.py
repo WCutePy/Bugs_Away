@@ -4,11 +4,18 @@ register = template.Library()
 
 
 @register.simple_tag
-def navbar_links():
+def navbar_left_links():
     return [
         ["/", "Game"],
         ["/stats", "Stats"],
-        ["/login", "Login"]
+        ["/test", "Test"]
+    ]
+
+
+@register.simple_tag
+def navbar_login():
+    return [
+        ["/login", "Login"],
     ]
 
 

@@ -1,0 +1,10 @@
+
+
+<a href="{{ link }}"
+   class="font-medium text-sm py-2 px-3 rounded-xl
+   {% if request.path == link %}
+    bg-gray-900 text-white
+   {% else %}
+    text-gray-300 hover:bg-gray-700 hover:text-white
+   {% endif %}"
+>{{ text }}</a>

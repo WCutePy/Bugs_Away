@@ -1,4 +1,5 @@
 {% extends "FSApp/base.html" %}
+{% load static %}
 
 {% block content %}
 
@@ -8,8 +9,8 @@
 
 <div class="flex flex-col items-center justify-center">
 
-  <div class="sm:mx-auto sm:w-full sm:max-w-sm pt-32">
-    <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm pt-14">
+    <img class="mx-auto h-32 w-auto" src="{% static "FSApp/img/logo.png" %}" alt="logo">
     <h2 class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">{{ name }}</h2>
   </div>
 

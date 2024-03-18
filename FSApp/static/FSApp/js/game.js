@@ -21,7 +21,8 @@ function timeSinceStart(){
 
 
 function clickedStartGame(event){
-    this.classList.add("invisible");
+    this.classList.add("hidden");
+    document.getElementById('timer-wrapper').classList.toggle("hidden");
 
     $.ajax({
         url: "start_game",
@@ -60,6 +61,7 @@ function requestGameState() {
             console.error("Error in AJAX request update game state:", error);
         }
     })
+    updateStopWatch();
 }
 
 
@@ -76,7 +78,6 @@ function updateGameState(data) {
             dataTarget => "target" + dataTarget[2] == targetId);
 
         if (!matchingData) {
-            console.log("removing!");
             existingTarget.remove();
         } else {
             existingTarget.style.left = "" + matchingData[0] + "%";
@@ -119,7 +120,7 @@ function clickedFrame(event) {
     let x = ((event.clientX - rect.left) / rect.width) * 100;
     let y = ((event.clientY - rect.top) / rect.height) * 100;
 
-    console.log(`Offset X/Y: ${x}, ${y}`);
+    // console.log(`Offset X/Y: ${x}, ${y}`);
     
     let response = {
         "gameId": gameId,
@@ -139,16 +140,42 @@ function clickedFrame(event) {
 }
 
 function clickedTarget(event) {
-    console.log("hit target: " +this.id);
+    // console.log("hit target: " +this.id);
     clicked = this;
 }
 
 
+// function createTarget(targetId, x, y) {
+//     let target = document.createElement("div");
+//     target.classList.add("game-target");
+//     target.style.left = "" + x + "%";
+//     target.style.top = "" + y + "%";
+//     target.style.transform = "translate(-50%, -50%)";
+//
+//     target.onclick = clickedTarget;
+//
+//     target.id = targetId;
+//     return target;
+// }
+
+
 function createTarget(targetId, x, y) {
-    let target = document.createElement("div");
+    let target = document.createElement("img");
     target.classList.add("game-target");
+
     target.style.left = "" + x + "%";
     target.style.top = "" + y + "%";
+
+    const ants = ["1-l", "1-r", "2-l", "2-r", "3-l", "3-r"];
+    // const ants = ["1-l"];
+    let index = getRndInteger(0, ants.length);
+    console.log(`spawning ${index}`);
+    let ant = ants[index];
+    target.src = `../../../static/FSApp/img/ant${ant}.png`;
+
+    // target.style.width = "" + 10 + "%";
+    // target.style.height = "" + 10 + "%";
+
     target.style.transform = "translate(-50%, -50%)";
 
     target.onclick = clickedTarget;
@@ -156,26 +183,6 @@ function createTarget(targetId, x, y) {
     target.id = targetId;
     return target;
 }
-
-
-// function createTarget(targetId, x, y) {
-//     let target = document.createElement("img");
-//     target.classList.add("game-target");
-//
-//     target.style.left = "" + x + "%";
-//     target.style.top = "" + y + "%";
-//     target.style.transform = "translate(-50%, -50%)";
-//
-//     target.src = "../../../static/FSApp/img/donut.jpg";
-//
-//     target.style.width = "" + 10 + "%";
-//     target.style.height = "" + 10 + "%";
-//
-//     target.onclick = clickedTarget;
-//
-//     target.id = targetId;
-//     return target;
-// }
 
 document.getElementById("frame").onclick = clickedFrame;
 document.getElementById("start-game").onclick = clickedStartGame;

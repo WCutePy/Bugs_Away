@@ -2,10 +2,10 @@
 
 - [ ] fix dotplot x y axis scale not the same ???
 - [ ] make game better
-- [ ] put login in a proper place
-- [ ] profile icon??
-- [ ] game icon on top left and on page icon
+- [ ] fix bug in game that has not all images render at all times
 - [ ] have a file export, probably stats
+- [ ] add reset button to game
+- [ ] make end of game look good
 
 ### In Progress
 
@@ -36,3 +36,7 @@
 - [x] have stats not crash if no games
 - [x] fix inverse y coordinate of the replay
 - [x] cleanup nav bar, display username
+- [x] profile icon?? - everything is ant themed now
+- [x] put login in a proper place
+- [x] game icon on top left and on page icon - AAAAANTS
+- [x] add timer to game

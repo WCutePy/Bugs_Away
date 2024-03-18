@@ -17,3 +17,6 @@ Create a database fsapp owned by fsapp. Make sure the user has privileges to mak
 
 In the case it's a fresh database, run migrate.bat, potentially make modifications to the venv path of the script.
 It is not necessary to create a superuser, a superuser will automatically be created with username admin and password admin.
+
+art is stolen from https://pikaole.tumblr.com/
+no permission has been received for the usage of the art.

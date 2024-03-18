@@ -1,8 +1,9 @@
 {% extends "FSApp/base.html" %}
 
-{% block title %}Stats{% endblock %}
-
 {% load humanize %}
+{% load static %}
+
+{% block title %}Stats{% endblock %}
 
 {% block content %}
   <div>
@@ -94,7 +95,7 @@
 </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-  <script src="../../../static/FSApp/js/stats.js"></script>
+  <script src="{% static "FSApp/js/stats.js" %}"></script>
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
 
 {% endblock %}

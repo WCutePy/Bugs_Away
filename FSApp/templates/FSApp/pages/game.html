@@ -1,51 +1,56 @@
 {% extends "FSApp/base.html" %}
+{% load static %}
 
 {% block title %}Game{% endblock %}
 
 {% block content %}
 
 
+<div class="pt-2">
 
-<div>
+  <div class="flex justify-center my-4 h-10">
 
-  <div>
-    <br>
+    <button id="start-game" type="button"
+            class="focus:outline-none text-white bg-green-700 hover:bg-green-800
+            focus:ring-4 focus:ring-green-300 font-medium rounded-lg
+            text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+    >Start Game</button>
 
-    <div class="flex justify-center">
-      <button id="start-game" type="button"
-              class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-      >Start Game</button>
-    </div>
-
-    <div class="grid grid-cols-3">
-
-      <div id="hp-container" class="relative place-self-end">
-        <img src="../../../static/FSApp/img/heart-70px.svg" alt="health image">
-        <div id="hp-display" class="absolute text-white text-4xl" style="left: 40%; top: 8%;">
-          3
-        </div>
-      </div>
-
-      <div id="frame" class="game-frame justify-self-center">
-        {% comment %} <div class="game-target"></div> {% endcomment %}
-        {% comment %} in case that things don't show up, uncomment the div above {% endcomment %}
-      </div>
-
-      <div id="kills-section" class="flex items-center self-end"> 
-        <div id="kill-display" class="text-white text-2xl min-w-16 text-center">
-        0
-        </div>
-        <img src="../../../static/FSApp/img/target-70px.svg" alt="kills image" style="width: 70px; height: 70px;">
-
-      </div>
-    
+    <div id="timer-wrapper" class="hidden">
+      {% include "FSApp/components/timer.html" %}
     </div>
 
   </div>
+
+  <div class="flex justify-center">
+
+    <div id="hp-container" class="relative place-self-end">
+      <img src="../../../static/FSApp/img/heart-70px.svg" alt="health image">
+      <div id="hp-display" class="absolute text-white text-4xl" style="left: 40%; top: 8%;">
+        3
+      </div>
+    </div>
+
+    <div id="frame" class="game-frame justify-self-center">
+      {% comment %} <div class="game-target"></div> {% endcomment %}
+      {% comment %} in case that things don't show up, uncomment the div above {% endcomment %}
+    </div>
+
+    <div id="kills-section" class="items-center self-end">
+      <div id="kill-display" class="text-white text-2xl min-w-16 text-center">
+      0
+      </div>
+      <img src="../../../static/FSApp/img/target-70px.svg" alt="kills image" style="width: 70px; height: 70px;">
+
+    </div>
+
+  </div>
+
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="../../../static/FSApp/js/game.js"></script>
+<script src="{% static "FSApp/js/timer.js" %}"></script>
+<script src="{% static "FSApp/js/game.js" %}"></script>
+
 
 {% endblock %}

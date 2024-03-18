@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <!-- bg-zinc-900 -->
 <html class="h-full bg-discord-default text-white" lang="en">
@@ -6,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}base page{% endblock %}</title>
 
-    <link href="../../static/FSApp/css/base.css" rel="stylesheet">
-    <link rel="shortcut icon" href="#">
+    <link href="{% static "FSApp/css/base.css" %}" rel="stylesheet">
+    <link rel="icon" href="{% static "FSApp/img/logo.png" %}" type="image/png">
 
     {% block headerJS %}{% endblock %}
     {% block headerCSS %}{% endblock %}
@@ -17,7 +19,9 @@
     <div>
         {% include "FSApp/components/navbar.html" %}
 
-        <div class="relative mt-12">
+         <noscript>You need to enable JavaScript to run this app.</noscript>
+
+        <div class="mt-12">
         {% block content %}{% endblock %}
         </div>
     </div>

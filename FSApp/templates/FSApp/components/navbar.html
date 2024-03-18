@@ -1,6 +1,7 @@
 
 
 {% load FSApp_extras %}
+{% load static %}
 
 
 <header class="bg-neutral-800 top-0 z-50 w-full border-b border-gray-700 fixed">
@@ -31,22 +32,15 @@
         </button>
       </div>
 
-      <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+      <div class="flex flex-1 justify-center sm:items-stretch sm:justify-start">
         <div class="flex flex-shrink-0 items-center">
-          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+          <img class="p-1 h-12 w-auto" src="{% static "FSApp/img/logo.png" %}" alt="logo">
         </div>
-        <div class="hidden sm:ml-6 sm:block">
-          <div class="flex space-x-4">
-            {% navbar_links as links %}
-            {% for link, text in links %}
-              <a href="{{ link }}"
-                 class="font-medium text-sm py-2 px-3 rounded-xl
-                 {% if request.path == link %}
-                  bg-gray-900 text-white
-                 {% else %}
-                  text-gray-300 hover:bg-gray-700 hover:text-white
-                 {% endif %}"
-              >{{ text }}</a>
+        <div class="hidden sm:ml-6 sm:block items-end">
+          <div class="flex space-x-4 py-4">
+            {% navbar_left_links as left_links %}
+            {% for link, text in left_links %}
+              {% include "FSApp/components/navbar_link.html" %}
             {% endfor %}
           </div>
         </div>
@@ -57,6 +51,13 @@
         <span class="text-gray-300">
           {{ request.user.username }}
         </span>
+        {% else %}
+          <div class="flex space-x-4 py-4">
+            {% navbar_login as login_link %}
+            {% for link, text in login_link %}
+              {% include "FSApp/components/navbar_link.html" %}
+            {% endfor %}
+          </div>
         {% endif %}
         <!-- Profile dropdown -->
         <div class="relative ml-3">
