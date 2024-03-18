@@ -51,7 +51,6 @@ function requestGameState() {
         url: "get_game_state",
         method: "GET",
         dataType: "json",
-        data: {"gameId": gameId},
         success: function(data) {
             updateGameState(data);
 
@@ -98,9 +97,28 @@ function updateGameState(data) {
     document.getElementById("hp-display").innerHTML = data["hp"];
     document.getElementById("kill-display").innerHTML = data["kills"];
     
-    if (data["terminate"]){
-        clearInterval(updateInterval);
+    if (parseInt(data["hp"]) <= 0){
+        endOfGame()
     }
+}
+
+
+function endOfGame(){
+    clearInterval(updateInterval);
+
+    $.ajax({
+        url: "get_end_of_game",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+            document.getElementById("end-of-game").classList.remove("hidden");
+            document.getElementById("end-record-time").innerText = data["record"];
+
+        },
+        error: function (error) {
+            console.error("Error in AJAX request update game state:", error);
+        }
+    })
 }
 
 
@@ -183,6 +201,7 @@ function createTarget(targetId, x, y) {
     target.id = targetId;
     return target;
 }
+
 
 document.getElementById("frame").onclick = clickedFrame;
 document.getElementById("start-game").onclick = clickedStartGame;

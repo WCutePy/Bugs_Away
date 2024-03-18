@@ -5,13 +5,6 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
-class CustomUser(AbstractUser):
-    profile_picture = models.IntegerField()
-
-    def __str__(self):
-        return self.username
-
-
 class Game(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True, default=None)
@@ -23,6 +16,15 @@ class Game(models.Model):
         VICTORY = 3
 
     result = models.IntegerField(choices=Result, default=1)
+
+
+class CustomUser(AbstractUser):
+    profile_picture = models.IntegerField()
+    record = models.ForeignKey(Game, on_delete=models.SET_NULL,
+                               null=True, blank=True, default=None)
+
+    def __str__(self):
+        return self.username
 
 
 class Click(models.Model):

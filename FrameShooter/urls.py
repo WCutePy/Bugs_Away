@@ -33,6 +33,7 @@ urlpatterns = [
     path(game_responses.get_game_state.__name__, game_responses.get_game_state),
     path(game_responses.start_game.__name__, game_responses.start_game),
     path(game_responses.receive_click.__name__, game_responses.receive_click),
+    path(game_responses.get_end_of_game.__name__, game_responses.get_end_of_game),
 
     path('personal_game_data/', views.personal_game_data),
     path('get_replay/', views.get_replay),

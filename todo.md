@@ -3,9 +3,9 @@
 - [ ] if console is closed, game is choppy and will sometimes not render
 - [ ] make game better
 - [ ] have a file export, probably stats
-- [ ] add reset button to game
+- [ ] add reset button to end of game
 - [ ] make end of game look good
-
+- [ ] account for setting a record on end of game
 - [ ] make stat left bar look good
 - [ ] have profile icon on the register
 

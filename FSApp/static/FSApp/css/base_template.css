@@ -35,6 +35,4 @@
   }
 }
 
-.game-frame {
-  @apply bg-discord-blue border-gray-200 rounded-lg shadow dark:border-gray-700 h-[500px] w-[500px] relative
-}
+

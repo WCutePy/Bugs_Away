@@ -8,7 +8,7 @@ from FSApp.utils.game.globals import \
     DEATH_BARRIER_PERCENT, TIMEOUT_TICKS, scheduler, SECONDS_PER_UPDATE
 from FSApp.utils.game.GameState import GameState
 from random import randint
-from FSApp.models import Game, Click, UserPerGame
+from FSApp.models import Game, Click, UserPerGame, CustomUser
 
 from datetime import timedelta
 
@@ -36,11 +36,11 @@ def createGame():
 
 
 def endGameJob(gameId, result=None):
+    end_time = datetime.now(pytz.utc)
     cGame: GameState = activeGames[gameId]
     cGame.job.remove()
     cGame.terminate = True
     # activeGames.pop(gameId)
-    end_time = datetime.now(pytz.utc)
     game_object = Game.objects.get(id=gameId)
     game_object.end_time = end_time
 
@@ -53,10 +53,23 @@ def endGameJob(gameId, result=None):
     game_object.result = result
     game_object.save()
 
+    game_time = end_time - cGame.start_time
+
     user_ids = Click.objects.filter(game_id=gameId).values_list('user_id', flat=True).distinct()
     ids = list(user_ids)
+
     if ids:
         UserPerGame.objects.create(user_id=ids[0], game_id=gameId)
+
+        user = CustomUser.objects.get(id=ids[0])
+        if user.record is None:
+            record_time = timedelta(0)
+        else:
+            record_time = user.record.end_time - user.record.start_time
+
+        if record_time < game_time:
+            user.record_id = gameId
+            user.save()
 
 
 def updateGameState(gameId):
@@ -84,8 +97,9 @@ def updateGameState(gameId):
             if target[1] > DEATH_BARRIER_PERCENT:
                 cGame.targets.remove(target)
                 cGame.hp -= 1
-                if cGame.hp == 0:
+                if cGame.hp <= 0:
                     endGameJob(gameId)
+                    break
     cGame.timeout += 1
     if cGame.timeout > TIMEOUT_TICKS:
         endGameJob(gameId)

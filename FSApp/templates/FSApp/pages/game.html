@@ -31,9 +31,32 @@
       </div>
     </div>
 
-    <div id="frame" class="game-frame justify-self-center">
-      {% comment %} <div class="game-target"></div> {% endcomment %}
-      {% comment %} in case that things don't show up, uncomment the div above {% endcomment %}
+    <div id="frame" class="flex justify-center bg-discord-blue border-gray-200 rounded-lg shadow dark:border-gray-700 h-[500px] w-[500px] relative">
+
+
+      <div id="end-of-game" class="bg-purple-900 w-2/4 h-1/3 self-center z-10
+            rounded-xl flex flex-col hidden
+       ">
+        <div class="flex justify-center pt-4">
+          Good game {{ user.username }}!
+        </div>
+        {% if request.user.is_authenticated %}
+          <div class="flex justify-center">
+            <span>
+              Your record is:&nbsp;
+            </span>
+            <span id="end-record-time">
+              UwU
+            </span>
+          </div>
+        {% else %}
+          <div class="flex justify-center pt-4 px-10">
+            If you want your games to be recorded,<br>please login
+          </div>
+        {% endif %}
+        </span>
+
+      </div>
     </div>
 
     <div id="kills-section" class="items-center self-end">
