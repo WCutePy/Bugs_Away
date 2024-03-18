@@ -1,5 +1,6 @@
 ### Todo
 
+- [ ] fix dotplot x y axis scale not the same ???
 - [ ] cleanup nav bar, display username
 - [ ] make game better
 - [ ] put login in a proper place
@@ -34,3 +35,4 @@
 - [x] PY generate game_page summary page graphs
 - [x] stats remove js from plots
 - [x] have stats not crash if no games
+- [x] fix inverse y coordinate of the replay

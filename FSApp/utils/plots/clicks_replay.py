@@ -53,6 +53,7 @@ def create_replay(click_data: pd.DataFrame):
         full_dataframe = pd.concat((full_dataframe, current_data),
                                    ignore_index=True)
 
+    full_dataframe["y"] = 100 - full_dataframe["y"]
     full_dataframe["hitstr"] = full_dataframe["hit"].astype(str)
 
     mapping = {True: 0, False: 1}
