@@ -7,7 +7,9 @@ let serverTimeOffset;
 
 let clicked = null;
 
-let intervalTime = 25;
+let intervalTime = 5;  // TODO match this up with timer, and make sure that all works
+
+let a = 0;
 
 
 function getRndInteger(min, max) {
@@ -46,17 +48,22 @@ function clickedStartGame(event){
 
 
 function requestGameState() {
+    a++
+    const index = a;
     // on success calls updateGameState
+    console.log(`Requesting ${index}`);
     $.ajax({
-        url: "get_game_state",
+        url: `get_game_state?game_id=${index}`,
         method: "GET",
         dataType: "json",
         success: function(data) {
+            console.log(`Starting update ${index}`);
             updateGameState(data);
-
+            console.log(`Finished update ${index}`);
             // requestAnimationFrame(requestGameState);
         },
         error: function (error) {
+            console.log(`Errored on update ${index}`);
             console.error("Error in AJAX request update game state:", error);
         }
     })
@@ -187,7 +194,7 @@ function createTarget(targetId, x, y) {
     const ants = ["1-l", "1-r", "2-l", "2-r", "3-l", "3-r"];
     // const ants = ["1-l"];
     let index = getRndInteger(0, ants.length);
-    console.log(`spawning ${index}`);
+
     let ant = ants[index];
     target.src = `../../../static/FSApp/img/ant${ant}.png`;
 
