@@ -7,7 +7,7 @@ let serverTimeOffset;
 
 let clicked = null;
 
-let intervalTime = 10;  // TODO match this up with timer, and make sure that all works
+let intervalTime = 100;  // TODO match this up with timer, and make sure that all works
 
 let a = 0;
 

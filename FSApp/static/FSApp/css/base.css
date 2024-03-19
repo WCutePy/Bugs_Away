@@ -749,6 +749,23 @@ select {
   --tw-backdrop-sepia:  ;
 }
 
+.game-target {
+  border-radius: 0.5rem/* 8px */;
+  /*--tw-bg-opacity: 1;*/
+  /*background-color: rgb(185 28 28 / var(--tw-bg-opacity));*/
+  height: 10%;
+  width: 10%;
+  position: absolute;
+  left: 5%;
+  top: 5%;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -984,6 +1001,10 @@ select {
   height: 100vh;
 }
 
+.max-h-\[calc\(100\%-3rem\)\] {
+  max-height: calc(100% - 3rem);
+}
+
 .w-2\/4 {
   width: 50%;
 }
@@ -1034,6 +1055,10 @@ select {
 
 .w-full {
   width: 100%;
+}
+
+.w-\[calc\(100\%-9rem\)\] {
+  width: calc(100% - 9rem);
 }
 
 .min-w-16 {
@@ -1950,5 +1975,4 @@ select {
     color: rgb(59 130 246 / var(--tw-text-opacity));
   }
 }
-
 

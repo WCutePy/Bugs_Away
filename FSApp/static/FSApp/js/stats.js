@@ -57,20 +57,23 @@ function clickedGameButton(gameId) {
     }
 
 
-function getReplay(gameId) {
+function getReplay() {
     replayRequestText.classList.replace("visible", "invisible");
 
     waitingElement.classList.replace("invisible", "visible");
 
+    const gameId = current;
+
     $.ajax({
-        url: `get_replay/?game_id=${current}`,
+        url: `get_replay/?game_id=${gameId}`,
         type: 'GET',
         dataType: 'json',
         success: function(response) {
             if (gameId !== current){
+                console.log(`returning! gameId: ${gameId} current: ${current}`);
                 return
             }
-
+            console.log(`performing! gameId: ${gameId} current: ${current}`);
             const replay = response.replay;
             $(`#replay`).html(replay);
 
