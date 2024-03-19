@@ -53,7 +53,7 @@ function requestGameState() {
     // on success calls updateGameState
     console.log(`Requesting ${index}`);
     $.ajax({
-        url: `get_game_state?game_id=${index}`,
+        url: `get_game_state?game_id=${gameId}?index=${index}`,
         method: "GET",
         dataType: "json",
         success: function(data) {

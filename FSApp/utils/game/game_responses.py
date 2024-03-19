@@ -22,7 +22,7 @@ def start_game(request):
 
 
 def get_game_state(request):
-    gameId = request.session["gameId"]
+    gameId = request.GET.get("game_id")
     cGame: GameState = activeGames[gameId]
     cGame.timeout = 0
     return JsonResponse({
@@ -35,7 +35,7 @@ def get_game_state(request):
 
 @csrf_exempt
 def receive_click(request):
-    gameId = request.session["gameId"]
+    gameId = request.session["gameId"]  # todo change to get
     data = request.POST
     cGame: GameState = activeGames[gameId]
     x, y, hitTarget = float(data["x"]), float(data["y"]), data["hitTarget"]
