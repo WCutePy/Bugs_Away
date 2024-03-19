@@ -7,7 +7,7 @@ let serverTimeOffset;
 
 let clicked = null;
 
-let intervalTime = 5;  // TODO match this up with timer, and make sure that all works
+let intervalTime = 10;  // TODO match this up with timer, and make sure that all works
 
 let a = 0;
 
@@ -48,22 +48,22 @@ function clickedStartGame(event){
 
 
 function requestGameState() {
-    a++
-    const index = a;
+    // a++
+    // const index = a;
     // on success calls updateGameState
-    console.log(`Requesting ${index}`);
+    // console.log(`Requesting ${index}`);
     $.ajax({
-        url: `get_game_state?game_id=${gameId}?index=${index}`,
+        url: `get_game_state?gameId=${gameId}`,
         method: "GET",
         dataType: "json",
         success: function(data) {
-            console.log(`Starting update ${index}`);
+            // console.log(`Starting update ${index}`);
             updateGameState(data);
-            console.log(`Finished update ${index}`);
+            // console.log(`Finished update ${index}`);
             // requestAnimationFrame(requestGameState);
         },
         error: function (error) {
-            console.log(`Errored on update ${index}`);
+            // console.log(`Errored on update ${index}`);
             console.error("Error in AJAX request update game state:", error);
         }
     })
