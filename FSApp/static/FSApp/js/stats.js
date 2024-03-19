@@ -21,7 +21,7 @@ function clickedGameButton(gameId) {
 
         replayRequestText.classList.replace("visible", "invisible");
         dotplotMenu.classList.replace("visible", "invisible");
-        waitingElement.classList.replace("invisible", "visible");
+        waitingElement.classList.replace("hidden", "visible");
 
         $.ajax({
             url: `personal_game_data/?game_id=${gameId}`,
@@ -32,7 +32,9 @@ function clickedGameButton(gameId) {
                     return
                 }
 
-                waitingElement.classList.replace("visible", "invisible");
+                document.getElementById("stats-main").classList.add("overflow-y-auto");
+
+                waitingElement.classList.replace("visible", "hidden");
 
                 current = gameId;
 
@@ -60,7 +62,7 @@ function clickedGameButton(gameId) {
 function getReplay() {
     replayRequestText.classList.replace("visible", "invisible");
 
-    waitingElement.classList.replace("invisible", "visible");
+    waitingElement.classList.replace("hidden", "visible");
 
     const gameId = current;
 
@@ -77,7 +79,7 @@ function getReplay() {
             const replay = response.replay;
             $(`#replay`).html(replay);
 
-            waitingElement.classList.replace("visible", "invisible");
+            waitingElement.classList.replace("visible", "hidden");
 
             if (gameId !== current){
                 $(`#replay`).html("");

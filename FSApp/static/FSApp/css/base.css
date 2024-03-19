@@ -893,6 +893,10 @@ select {
   margin-bottom: 1.25rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .ml-3 {
   margin-left: 0.75rem;
 }
@@ -993,16 +997,16 @@ select {
   height: 500px;
 }
 
+.h-\[calc\(100\%-3rem\)\] {
+  height: calc(100% - 3rem);
+}
+
 .h-full {
   height: 100%;
 }
 
 .h-screen {
   height: 100vh;
-}
-
-.max-h-\[calc\(100\%-3rem\)\] {
-  max-height: calc(100% - 3rem);
 }
 
 .w-2\/4 {
@@ -1049,16 +1053,16 @@ select {
   width: 500px;
 }
 
+.w-\[calc\(100\%-9rem\)\] {
+  width: calc(100% - 9rem);
+}
+
 .w-auto {
   width: auto;
 }
 
 .w-full {
   width: 100%;
-}
-
-.w-\[calc\(100\%-9rem\)\] {
-  width: calc(100% - 9rem);
 }
 
 .min-w-16 {
@@ -1071,10 +1075,6 @@ select {
 
 .max-w-\[1200px\] {
   max-width: 1200px;
-}
-
-.max-w-\[calc\(100\%-9rem\)\] {
-  max-width: calc(100% - 9rem);
 }
 
 .flex-1 {
@@ -1206,6 +1206,10 @@ select {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.overscroll-none {
+  overscroll-behavior: none;
 }
 
 .rounded {
@@ -1605,6 +1609,21 @@ select {
 
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+*::-webkit-scrollbar {
+  width: 15px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(236, 236, 236, 0.4);
+  border-radius: 14px;
+  border: 3px solid var(--primary);
 }
 
 .placeholder-shown\:\!border-gray-600:-moz-placeholder-shown {
