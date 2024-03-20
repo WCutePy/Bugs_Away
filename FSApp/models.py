@@ -22,6 +22,8 @@ class CustomUser(AbstractUser):
     profile_picture = models.IntegerField()
     record = models.ForeignKey(Game, on_delete=models.SET_NULL,
                                null=True, blank=True, default=None)
+    profile_picture_string = models.CharField(max_length=40, null=False,
+                                              default="kale.jpg")
 
     def __str__(self):
         return self.username

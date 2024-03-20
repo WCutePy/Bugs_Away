@@ -70,7 +70,11 @@
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">Open user menu</span>
               <img class="h-8 w-8 rounded-full group-hover:animate-[spin_5s_linear_infinite]"
-                   src="{% static "FSApp/img/kale.jpg" %}" alt="">
+                   src="{% if request.user.is_authenticated %}
+                          {% static "FSApp/img/pp/" %}{{ request.user.profile_picture_string }}
+                        {% else %}
+                          {% static "FSApp/img/pp/anon.png" %}
+                        {% endif %}" alt="">
             </button>
 
             <!--

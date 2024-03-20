@@ -1,3 +1,8 @@
+import base64
+import imghdr
+import random
+import string
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from re import match
@@ -7,6 +12,9 @@ from FSApp.models import CustomUser, UserPerGame
 from django.contrib import messages
 from random import randint
 from FSApp.utils.plots.game_plots import game_plots, game_replay
+
+import io, base64
+from PIL import Image
 
 from time import sleep
 
@@ -102,23 +110,42 @@ def register_view(request):
                "name": "register",
                "button_text": "sign up"}
 
+
+
     if request.method == "POST":
-        error = []
+        error = False
         for name, _, pattern, minl, maxl in context["form_tags"]:
             field = request.POST.get(name)
             if len(field) < minl or len(field) > maxl:
                 messages.error(request, f"{name.title()} is not appropriate length.")
+                error = True
                 break
             if not match(pattern, field):
                 messages.error(request, f"{name.title()} contains not allowed characters.")
+                error = True
                 break
+
+        image_data = request.POST.get('image_data')
+        try:
+            img = Image.open(
+                io.BytesIO(base64.decodebytes(bytes(image_data, "utf-8"))))
+
+        except:
+            error = True
+            messages.error(request, "Please provide a png or jpg image.")
 
         if not error:
             try:
+                filename = ''.join(random.choices(string.ascii_letters + string.digits, k=32)) + ".png"
+
+                img.save(rf"FSApp\static\FSApp\img\pp\{filename}")
+
+
                 user = CustomUser.objects.create_user(
                     username=request.POST.get("Username"),
                     password=request.POST.get("Password"),
-                    profile_picture=0
+                    profile_picture=0,
+                    profile_picture_string=filename,
                 )
 
                 login(request, user)

@@ -1,18 +1,20 @@
 from FSApp.utils.plots.default_layout import apply_default_layout
-import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import pandas as pd
+
 
 # todo investigate, slider not always showing up when time below 1 sec
 # todo figure the fuck out why timing doesn't work, and how to scale it
 # todo scale time to minute and seconds
 
+interval = 0.05 # seconds
+
 
 def create_replay(click_data: pd.DataFrame):
     pd.options.mode.chained_assignment = None
 
-    interval = 0.05  # seconds
+
     sigma = 0.25
     max_size = 15
 
