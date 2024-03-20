@@ -1,13 +1,10 @@
 ### Todo
 
-- [ ] if console is closed, game is choppy and will sometimes not render
 - [ ] make game better
-- [ ] have a file export, probably stats
 - [ ] add reset button to end of game
 - [ ] make end of game look good
 - [ ] account for setting a record on end of game
 - [ ] make stat left bar look good
-- [ ] have profile icon on the register
 
 ### In Progress
 
@@ -47,3 +44,5 @@
 - [x] have logo on login rotate
 - [x] have error bar not overlap with logo on failed login
 - [x] cancel replay if user switches games - should be fixed
+- [x] if console is closed, game is choppy and will sometimes not render -> fuck session db connection
+- [x] added profile picture
