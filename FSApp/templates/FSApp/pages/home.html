@@ -1,0 +1,38 @@
+{% extends "FSApp/base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col items-center justify-center pt-20">
+    <div>
+        Are you a programmer?
+    </div>
+    <div>
+        Are you sick and tired of bugs ruining your life?
+    </div>
+    <div>
+        Let out your frustration and kill some bugs.
+    </div>
+    {% if not request.user.is_authenticated %}
+    <div class="mt-4">
+        If you wish to see some statistics of your gameplay, please sign up.
+    </div>
+    <a href="/register" class="mt-2">
+        <button class="{% include "FSApp/components/button_classes.html" %}
+         bg-indigo-600 hover:bg-indigo-700">Sign up</button>
+    </a>
+    {% endif %}
+
+    <div class="mt-4">
+        Play now by clicking the bug
+    </div>
+    <a href="/game" class="mt-2">
+        <img src="{% static "FSApp/img/logo.png" %}" class="hover:bg-gray-700 rounded-3xl"
+        alt="Go to game page"
+        width="200"
+        >
+    </a>
+</div>
+{% endblock %}

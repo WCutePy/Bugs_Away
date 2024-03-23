@@ -2,40 +2,32 @@ from datetime import datetime
 
 import pytz
 
-from FSApp.utils.game.globals import \
-    activeGames, NORMAL_SPEED, NORMAL_TICKS_PER_MOVE, \
-    NORMAL_TICKS_PER_SPAWN, \
-    DEATH_BARRIER_PERCENT, TIMEOUT_TICKS, scheduler, SECONDS_PER_UPDATE
+from FSApp.utils.game.globals import *
 from FSApp.utils.game.GameState import GameState
-from random import randint
+from random import randint, choices, random
 from FSApp.models import Game, Click, UserPerGame, CustomUser
 
 from datetime import timedelta
 
-count = 0
 
-
-def createGame():
+def createGame(difficulty_level: int):
     start_time = datetime.now(pytz.utc)
     game = Game.objects.create(start_time=start_time)
     gameId = game.id
     job = scheduler.add_job(
-            updateGameState, "interval", seconds=SECONDS_PER_UPDATE,
-            id=str(gameId), args=(gameId,))
-    activeGames[gameId] = GameState(gameId, job, start_time)
+        updateGameState, "interval", seconds=SECONDS_PER_UPDATE,
+        id=str(gameId), args=(gameId, DIFFICULTIES[difficulty_level]))
+    activeGames[gameId] = GameState(gameId, job, start_time, difficulty_level)
     cGame: GameState = activeGames[gameId]
     with cGame.lock:
-        for i, a in enumerate(
-                ([5, 15, 0, timedelta(0)], [59, 17, 1, timedelta(0)],
-                 [40, 50, 2, timedelta(0)], [50, 39, 3, timedelta(0)])
-        ):
-            cGame.targets.append(a)
-            cGame.targetId += 1
+        for i in range(1):
+            t = create_target(cGame, DIFFICULTIES[difficulty_level])
+            cGame.targets.append(t)
 
     return gameId, start_time
 
 
-def endGameJob(gameId, result=None):
+def endGameJob(gameId, difficulty):
     end_time = datetime.now(pytz.utc)
     cGame: GameState = activeGames[gameId]
     cGame.job.remove()
@@ -44,13 +36,6 @@ def endGameJob(gameId, result=None):
     game_object = Game.objects.get(id=gameId)
     game_object.end_time = end_time
 
-    if result is None:
-        if cGame.hp <= 0:
-            result = Game.Result.DEFEAT
-        else:
-            result = Game.Result.UNDEFINED
-
-    game_object.result = result
     game_object.save()
 
     game_time = end_time - cGame.start_time
@@ -59,50 +44,75 @@ def endGameJob(gameId, result=None):
     ids = list(user_ids)
 
     if ids:
-        UserPerGame.objects.create(user_id=ids[0], game_id=gameId)
+        user_id = ids[0]
+        UserPerGame.objects.create(user_id=user_id, game_id=gameId)
 
-        user = CustomUser.objects.get(id=ids[0])
-        if user.record is None:
+        file = open("error.txt", "w")
+        user_record = UserRecords.objects.filter(user_id=user_id, difficulty=cGame.difficulty).first()
+        record_game = user_record.game
+        file.write(f"{user_record}\n{user_id}\n{cGame.difficulty}\n{record_game}")
+        if record_game is None:
             record_time = timedelta(0)
         else:
-            record_time = user.record.end_time - user.record.start_time
+            record_time = record_game.end_time - record_game.start_time
 
         if record_time < game_time:
-            user.record_id = gameId
-            user.save()
+            user_record.game_id = gameId
+            user_record.save()
+    cGame.processed = True
 
 
-def updateGameState(gameId):
-    global count
-    count += 1
+def updateGameState(gameId: int, difficulty: Difficulty):
     cGame: GameState = activeGames[gameId]
+    cGame.count += 1
+    count = cGame.count
+
     with cGame.lock:
-        if count % NORMAL_TICKS_PER_MOVE == 0:
-            for target in cGame.targets:
-                target[1] += NORMAL_SPEED
-        if count % NORMAL_TICKS_PER_SPAWN == 0:
-            # x y id
-            cGame.targets.append(
-                [randint(5, 95),
-                 randint(5, 45),
-                 cGame.targetId,
-                 datetime.now(pytz.utc) - cGame.start_time
-                 ]
-            )
-            cGame.targetId += 1
         for target in cGame.targets[:]:
-            if len(target) > 4:
+            target[1] += difficulty.SPEEDS[target[4]] + (
+                        count // difficulty.TICKS_PER_SPEED_INCREASE) * difficulty.SPEED_INCREASE
+            #  refactor formula out of loop ?
+
+            if len(target) > DEFAULT_TARGET_LENGTH:
                 cGame.targets.remove(target)
                 cGame.kills += 1
+
             if target[1] > DEATH_BARRIER_PERCENT:
                 cGame.targets.remove(target)
                 cGame.hp -= 1
                 if cGame.hp <= 0:
-                    endGameJob(gameId)
+                    endGameJob(gameId, difficulty)
                     break
+        if (difficulty.SPAWN_RATE + (
+                (count // difficulty.TICKS_PER_SPAWN_INCREASE) * difficulty.SPAWN_RATE_INCREASE)) > random():
+            # x y id
+            cGame.targets.append(
+                create_target(cGame, difficulty)
+            )
+
     cGame.timeout += 1
     if cGame.timeout > TIMEOUT_TICKS:
-        endGameJob(gameId)
+        endGameJob(gameId, difficulty)
+
+
+def create_target(cGame: GameState, difficulty: Difficulty) -> list:
+    """_summary_
+    0 x
+    1 y
+    2 unique id
+    3 creation time
+    4 type id
+    """
+    type_index = choices(range(0, len(difficulty.SPAWN_DISTRIBUTION)), difficulty.SPAWN_DISTRIBUTION)[0]
+    target = [randint(5, 95),
+              -5,
+              cGame.targetId,
+              datetime.now(pytz.utc) - cGame.start_time,
+              type_index
+              ]
+    cGame.targetId += 1
+
+    return target
 
 
 def process_click(x, y, hitTarget, targets, elapsed_time, gameId, userId):
@@ -154,4 +164,3 @@ def process_click(x, y, hitTarget, targets, elapsed_time, gameId, userId):
                          elapsed_time_since_start=elapsed_time,
                          elapsed_time_since_target_spawn=elapsed_time_since_target_spawn,
                          user_id=userId, game_id=gameId)
-

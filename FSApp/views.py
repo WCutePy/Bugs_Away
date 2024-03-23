@@ -8,7 +8,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from re import match
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from FSApp.models import CustomUser, UserPerGame
+from FSApp.models import CustomUser, UserPerGame, Game, UserRecords
 from django.contrib import messages
 from random import randint
 from FSApp.utils.plots.game_plots import game_plots, game_replay
@@ -140,13 +140,17 @@ def register_view(request):
 
                 img.save(rf"FSApp\static\FSApp\img\pp\{filename}")
 
-
                 user = CustomUser.objects.create_user(
                     username=request.POST.get("Username"),
                     password=request.POST.get("Password"),
                     profile_picture=0,
                     profile_picture_string=filename,
                 )
+
+                default_records = []
+                for option in Game.Difficulty.choices:
+                    default_records.append(UserRecords(user=user, difficulty=option[0], game=None))
+                UserRecords.objects.bulk_create(default_records)
 
                 login(request, user)
 
@@ -159,3 +163,7 @@ def register_view(request):
 
 def test(request):
     return render(request, "FSApp/pages/test.html")
+
+
+def home(request):
+    return render(request, "FSApp/pages/home.html")

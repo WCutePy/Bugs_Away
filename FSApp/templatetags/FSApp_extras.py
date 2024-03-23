@@ -6,7 +6,8 @@ register = template.Library()
 @register.simple_tag
 def navbar_left_links():
     return [
-        ["/", "Game"],
+        ["/", "Home"],
+        ["/game", "Game"],
         ["/stats", "Stats"],
         ["/test", "Test"]
     ]

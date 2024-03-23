@@ -7,7 +7,7 @@ let serverTimeOffset;
 
 let clicked = null;
 
-let intervalTime = 100;  // TODO match this up with timer, and make sure that all works
+let intervalTime = 25;
 
 let a = 0;
 
@@ -23,11 +23,20 @@ function timeSinceStart(){
 
 
 function clickedStartGame(event){
-    this.classList.add("hidden");
-    document.getElementById('timer-wrapper').classList.toggle("hidden");
+    document.getElementById('start-game-buttons').classList.add("hidden");
+    document.getElementById('timer-wrapper').classList.remove("invisible");
+    document.getElementById("difficulty").textContent = this.textContent;    
+    document.getElementById("difficulty").classList.remove("hidden");
+    document.getElementById("end-of-game").classList.add("hidden");
+
+    document.getElementById('frame').querySelectorAll('img').forEach(function(imgElement) {
+        imgElement.parentNode.removeChild(imgElement);
+    });
+
+    clearTimer();
 
     $.ajax({
-        url: "start_game",
+        url: `start_game?difficultyLevel=${this.getAttribute("data-value")}`,
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -96,7 +105,7 @@ function updateGameState(data) {
             target => target.id == "target" + newTargetData[2]);
 
         if (!existingTarget) {
-            const newTarget = createTarget("target" + newTargetData[2], newTargetData[0], newTargetData[1]);
+            const newTarget = createTarget("target" + newTargetData[2], newTargetData[0], newTargetData[1], newTargetData[4]);
             container.appendChild(newTarget);
         } 
     });
@@ -105,21 +114,25 @@ function updateGameState(data) {
     document.getElementById("kill-display").innerHTML = data["kills"];
     
     if (parseInt(data["hp"]) <= 0){
-        endOfGame()
+        clearInterval(updateInterval);
+        // endOfGame()
+        setTimeout(endOfGame, 100);
     }
 }
 
 
 function endOfGame(){
-    clearInterval(updateInterval);
+
 
     $.ajax({
-        url: "get_end_of_game",
+        url: `get_end_of_game?gameId=${gameId}`,
         method: "GET",
         dataType: "json",
         success: function(data) {
             document.getElementById("end-of-game").classList.remove("hidden");
+            document.getElementById("start-game-buttons").classList.remove("hidden");
             document.getElementById("end-record-time").innerText = data["record"];
+
 
         },
         error: function (error) {
@@ -184,19 +197,18 @@ function clickedTarget(event) {
 // }
 
 
-function createTarget(targetId, x, y) {
+function createTarget(targetId, x, y, typeId) {
     let target = document.createElement("img");
     target.classList.add("game-target");
 
     target.style.left = "" + x + "%";
     target.style.top = "" + y + "%";
 
-    const ants = ["1-l", "1-r", "2-l", "2-r", "3-l", "3-r"];
+    const versions = ["l", "r"];
     // const ants = ["1-l"];
-    let index = getRndInteger(0, ants.length);
+    let index = getRndInteger(0, versions.length);
 
-    let ant = ants[index];
-    target.src = `../../../static/FSApp/img/ant${ant}.png`;
+    target.src = `../../../static/FSApp/img/ant${typeId+1}-${versions[index]}.png`;
 
     // target.style.width = "" + 10 + "%";
     // target.style.height = "" + 10 + "%";
@@ -211,4 +223,8 @@ function createTarget(targetId, x, y) {
 
 
 document.getElementById("frame").onclick = clickedFrame;
-document.getElementById("start-game").onclick = clickedStartGame;
+// document.getElementById("start-game-buttons").onclick = clickedStartGame;
+
+buttons = document.getElementById('start-game-buttons').querySelectorAll("button").forEach(function(button) {
+    button.onclick = clickedStartGame;
+});

@@ -23,7 +23,8 @@ from FSApp.utils.game import game_responses
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-    path("", views.game_page),
+    path("", views.home),
+    path("game", views.game_page),
     path("stats", views.stats),
 
     path("login", views.login_view),

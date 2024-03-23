@@ -42,9 +42,9 @@
       {% block extra-fields %}{% endblock %}
 
       <div>
-        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6
-        text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
-        focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ button_text }}</button>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700
+            {% include "FSApp/components/button_classes.html" %}">
+            {{ button_text }}</button>
       </div>
     {% csrf_token %}
 

@@ -5,29 +5,26 @@
 let hour = 0;
 let minute = 0;
 let second = 0;
-let count = 0;
+let ms = 0;
 let timer;
 
 
 function updateStopWatch() {
-    count += Math.floor(intervalTime / 10);
+    let currentDate = new Date();
 
-    if (count >= 100) {
-        second++;
-        count -= 100;
-    }
+    let elapsedTime = currentDate - clientStartTime;
+    ms = elapsedTime % 1000;
+    let totalSeconds = Math.floor(elapsedTime / 1000);
+    second = totalSeconds % 60;
+    minute = Math.floor(totalSeconds / 60);
 
-    if (second == 60) {
-        minute++;
-        second = 0;
-    }
     updateDisplay();
 }
 
 function updateDisplay() {
     document.getElementById('min').textContent =minute.toString().padStart(2, '0');
     document.getElementById('sec').textContent =second.toString().padStart(2, '0');
-    document.getElementById('count').textContent = Math.min(count + getRndInteger(0, 9), 99).toString().padStart(2, '0');
+    document.getElementById('count').textContent = ms.toString().slice(0, 2).padStart(2, "0");
 }
 
 
@@ -49,7 +46,7 @@ function clearTimer() {
     hour = 0;
     minute = 0;
     second = 0;
-    count = 0;
+    ms = 0;
 
     updateDisplay();
     document.getElementById('count').textContent = "00";
