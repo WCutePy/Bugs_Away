@@ -4,7 +4,6 @@ from collections import namedtuple
 from dataclasses import dataclass
 from math import floor
 
-
 try:
     superuser = CustomUser.objects.create(
         username="admin",
@@ -23,67 +22,68 @@ try:
 except:
     pass
 
-
 activeGames = {}
 scheduler = BackgroundScheduler(max_instances=1)
 scheduler.start()
 
 DEFAULT_TARGET_LENGTH = 5
 
-
 DEATH_BARRIER_PERCENT = 95
 
 TIMEOUT_TICKS = 200
 SECONDS_PER_UPDATE = 0.025
 
-NORMAL_HP = 1
+NORMAL_HP = 50000
+
+TARGET_SIZE_HALF = 5
 
 
 @dataclass(frozen=True)
 class Difficulty:
-    SPEEDS: tuple[float]
+    SPEEDS: tuple[float, ...]
     TICKS_PER_SPEED_INCREASE: int
     SPEED_INCREASE: float
 
-    SPAWN_DISTRIBUTION: tuple[float]
+    SPAWN_DISTRIBUTION: tuple[float, ...]
     TICKS_PER_SPAWN: int
     SPAWN_RATE: float
     TICKS_PER_SPAWN_INCREASE: int
     SPAWN_RATE_INCREASE: float
 
-# spawn rate is 
+
+# spawn rate is
 
 easy = Difficulty(
-    (1/9, 1/6, 1/4),
-    20 // SECONDS_PER_UPDATE,
-    1/15,
+    (1 / 9, 1 / 6, 1 / 4),
+    int(20 / SECONDS_PER_UPDATE),
+    1 / 15,
 
     (0.6, 0.3, 0.1),
     35,
-    1/35,
-    30 // SECONDS_PER_UPDATE,
-    1/35,
+    0.01,
+    int(15 / SECONDS_PER_UPDATE),
+    0.0035,
 )
 medium = Difficulty(
-    (1/6, 1/4, 1/2.5),
-    10 // SECONDS_PER_UPDATE,
-    1/15,
+    (1 / 6, 1 / 4, 1 / 2.5),
+    int(17.5 / SECONDS_PER_UPDATE),
+    1 / 15,
 
     (0.5, 0.3, 0.2),
     25,
-    1/25,
-    20 // SECONDS_PER_UPDATE,
-    1/25,
+    0.02,
+    int(15 / SECONDS_PER_UPDATE),
+    0.005,
 )
 hard = Difficulty(
-    (1/4.5, 1/2.5, 1/1),
-    8 // SECONDS_PER_UPDATE,
-    1/15,
+    (1 / 4.5, 1 / 2.5, 1 / 1.75),
+    int(15 / SECONDS_PER_UPDATE),
+    1 / 15,
 
     (0.3, 0.35, 0.35),
     17,
-    1/17.5,
-    12 // SECONDS_PER_UPDATE,
-    1/17.5,
+    0.125,
+    int(12.5 / SECONDS_PER_UPDATE),
+    0.005,
 )
 DIFFICULTIES = (easy, medium, hard)

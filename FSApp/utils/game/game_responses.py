@@ -40,7 +40,7 @@ def receive_click(request):
     data = request.POST
     gameId = int(data["gameId"])
     cGame: GameState = activeGames[gameId]
-    x, y, hitTarget = float(data["x"]), float(data["y"]), data["hitTarget"]
+    x, y = float(data["x"]), float(data["y"])
     elapsed_time = data["elapsedTime"]
     targets = cGame.targets[:]
 
@@ -49,7 +49,7 @@ def receive_click(request):
     #                       request.user.id))
     # thread.start()
 
-    process_click(x, y, hitTarget, targets, elapsed_time, gameId,
+    process_click(x, y, targets, elapsed_time, gameId,
                   request.user.id)
 
     return HttpResponse(status=204)

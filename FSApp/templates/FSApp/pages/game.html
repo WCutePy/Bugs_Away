@@ -1,4 +1,5 @@
 {% extends "FSApp/base.html" %}
+{% load FSApp_extras %}
 {% load static %}
 
 {% block title %}Game{% endblock %}
@@ -15,21 +16,14 @@
       </div>
 
       <div id="start-game-buttons" class="">
-        <button id="start-game-easy" type="button" data-value="0"
+          {% difficulty_names as difficulties %}
+          {% for diff_name in difficulties %}
+        <button id="start-game-easy" type="button" data-value="{{ forloop.counter0 }}"
                 class="focus:outline-none text-white bg-green-700 hover:bg-green-800
                 focus:ring-4 focus:ring-green-300 font-medium rounded-lg
                 text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-        >Ez</button>
-        <button id="start-game-medium" type="button" data-value="1"
-                class="focus:outline-none text-white bg-green-700 hover:bg-green-800
-                focus:ring-4 focus:ring-green-300 font-medium rounded-lg
-                text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-        >alright</button>
-        <button id="start-game-hard" type="button" data-value="2 "
-                class="focus:outline-none text-white bg-green-700 hover:bg-green-800
-                focus:ring-4 focus:ring-green-300 font-medium rounded-lg
-                text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-        >gangster</button>
+        >{{ diff_name }}</button>
+          {% endfor %}
       </div>
 
       <div id="timer-wrapper" class="invisible flex self-end flex-1 justify-end">

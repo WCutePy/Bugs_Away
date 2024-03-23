@@ -4,7 +4,7 @@
 - [ ] account for setting a record on end of game
 - [ ] make stat left bar look good
 - [ ] make interval clearer -> x as visueel beter, label "interval delta time"
-- [ ] balance game
+
 
 ### In Progress
 
@@ -51,3 +51,5 @@
 - [X] added record per difficulty to the database. Implemented it to the full stack as well
 - [X] cleaned up database
 - [X] add homescreen
+- [X] balance game -> maybe it's done
+- [X] hit detection moved to backend

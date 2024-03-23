@@ -5,8 +5,6 @@ let serverStartTime;
 let clientStartTime;
 let serverTimeOffset;
 
-let clicked = null;
-
 let intervalTime = 25;
 
 let a = 0;
@@ -143,13 +141,7 @@ function endOfGame(){
 
 
 function clickedFrame(event) {
-    let clicked_id = null;
     let elapsed_time = timeSinceStart();
-
-    if (clicked != null){
-        clicked_id = clicked.id;
-        clicked = null;
-    }
 
     let container = event.currentTarget;
 
@@ -164,7 +156,6 @@ function clickedFrame(event) {
         "gameId": gameId,
         "x": x,
         "y": y,
-        "hitTarget": clicked_id,
         "elapsedTime": elapsed_time
     };
 
@@ -176,12 +167,6 @@ function clickedFrame(event) {
         data: response,
     })
 }
-
-function clickedTarget(event) {
-    // console.log("hit target: " +this.id);
-    clicked = this;
-}
-
 
 // function createTarget(targetId, x, y) {
 //     let target = document.createElement("div");
@@ -214,8 +199,6 @@ function createTarget(targetId, x, y, typeId) {
     // target.style.height = "" + 10 + "%";
 
     target.style.transform = "translate(-50%, -50%)";
-
-    target.onclick = clickedTarget;
 
     target.id = targetId;
     return target;

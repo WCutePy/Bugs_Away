@@ -21,6 +21,15 @@ def navbar_login():
 
 
 @register.simple_tag
+def difficulty_names():
+    return (
+        "ez",
+        "alright",
+        "gangster",
+    )
+
+
+@register.simple_tag
 def testing():
     return "hello how are you"
 

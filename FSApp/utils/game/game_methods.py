@@ -70,7 +70,7 @@ def updateGameState(gameId: int, difficulty: Difficulty):
     with cGame.lock:
         for target in cGame.targets[:]:
             target[1] += difficulty.SPEEDS[target[4]] + (
-                        count // difficulty.TICKS_PER_SPEED_INCREASE) * difficulty.SPEED_INCREASE
+                    count // difficulty.TICKS_PER_SPEED_INCREASE) * difficulty.SPEED_INCREASE
             #  refactor formula out of loop ?
 
             if len(target) > DEFAULT_TARGET_LENGTH:
@@ -84,7 +84,7 @@ def updateGameState(gameId: int, difficulty: Difficulty):
                     endGameJob(gameId, difficulty)
                     break
         if (difficulty.SPAWN_RATE + (
-                (count // difficulty.TICKS_PER_SPAWN_INCREASE) * difficulty.SPAWN_RATE_INCREASE)) > random():
+                int(count / difficulty.TICKS_PER_SPAWN_INCREASE) * difficulty.SPAWN_RATE_INCREASE)) > random():
             # x y id
             cGame.targets.append(
                 create_target(cGame, difficulty)
@@ -115,34 +115,27 @@ def create_target(cGame: GameState, difficulty: Difficulty) -> list:
     return target
 
 
-def process_click(x, y, hitTarget, targets, elapsed_time, gameId, userId):
+def process_click(x, y, targets, elapsed_time, gameId, userId):
     closest_target = None
     target_spawned_at = None
+    hit = False
 
     file = open("error.txt", "a")
 
-    if hitTarget != "":
-        hitCompare = int(hitTarget.strip("target"))
-        for target in targets:
-            if target[2] == hitCompare:
-                closest_target = tuple(target)
-                target_spawned_at = target[3]
-
-                file.write(f"{target_spawned_at} {type(target_spawned_at)}\n")
-
-                target.append("delete")
-                break
+    delta = 200
+    for target in targets:
+        tx, ty, tId, t_spawned_at, *_ = target
+        n_delta = abs(x - tx) + abs(y - ty)
+        if delta > n_delta:
+            closest_target = (tx, ty, tId)
+            delta = n_delta
+        if (tx - TARGET_SIZE_HALF <= x <= tx + TARGET_SIZE_HALF) \
+                and (ty - TARGET_SIZE_HALF <= y <= ty + TARGET_SIZE_HALF):
+            target_spawned_at = t_spawned_at
+            target.append("delete")
 
     if userId is None:
         return
-
-    if hitTarget == "":
-        delta = 200
-        for (tx, ty, tId, *_) in targets:
-            n_delta = abs(x - tx) + abs(y - ty)
-            if delta > n_delta:
-                closest_target = (tx, ty, tId)
-                delta = n_delta
 
     if closest_target is not None:
         dx = x - closest_target[0]
@@ -154,12 +147,13 @@ def process_click(x, y, hitTarget, targets, elapsed_time, gameId, userId):
     elapsed_time = timedelta(seconds=int(elapsed_time) / 1000)
     elapsed_time_since_target_spawn = None
     if target_spawned_at is not None:
+        hit = True
         elapsed_time_since_target_spawn = elapsed_time - target_spawned_at
         file.write(f"{elapsed_time_since_target_spawn} {type(elapsed_time_since_target_spawn)}\n")
     file.write("\n")
     file.close()
 
-    Click.objects.create(frame=1, x=x, y=y, hit=bool(hitTarget),
+    Click.objects.create(frame=1, x=x, y=y, hit=hit,
                          dx=dx, dy=dy,
                          elapsed_time_since_start=elapsed_time,
                          elapsed_time_since_target_spawn=elapsed_time_since_target_spawn,
