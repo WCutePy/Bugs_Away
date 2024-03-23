@@ -33,7 +33,7 @@ DEATH_BARRIER_PERCENT = 95
 TIMEOUT_TICKS = 200
 SECONDS_PER_UPDATE = 0.025
 
-NORMAL_HP = 50000
+NORMAL_HP = 3
 
 TARGET_SIZE_HALF = 5
 
@@ -82,7 +82,7 @@ hard = Difficulty(
 
     (0.3, 0.35, 0.35),
     17,
-    0.125,
+    0.035,
     int(12.5 / SECONDS_PER_UPDATE),
     0.005,
 )

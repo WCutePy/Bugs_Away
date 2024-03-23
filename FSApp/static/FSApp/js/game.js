@@ -9,6 +9,12 @@ let intervalTime = 25;
 
 let a = 0;
 
+const bgMusic = [
+    new Audio("../../../static/FSApp/audio/bg-1.mp3"),
+    new Audio("../../../static/FSApp/audio/bg-2.mp3"),
+    new Audio("../../../static/FSApp/audio/bg-3.mp3"),
+]
+
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;
@@ -32,6 +38,9 @@ function clickedStartGame(event){
     });
 
     clearTimer();
+    let bg = bgMusic[parseInt(this.getAttribute("data-value"))]
+    bg.currentTime = 0;
+    bg.play();
 
     $.ajax({
         url: `start_game?difficultyLevel=${this.getAttribute("data-value")}`,
@@ -84,6 +93,7 @@ function updateGameState(data) {
     const targets = data["targets"];
 
     const existingTargets = Array.from(container.getElementsByClassName("game-target")); // change into get children if slow
+    let removals = 0;
 
     existingTargets.forEach(existingTarget => {
         const targetId = existingTarget.id;
@@ -92,6 +102,7 @@ function updateGameState(data) {
 
         if (!matchingData) {
             existingTarget.remove();
+            removals += 1;
         } else {
             existingTarget.style.left = "" + matchingData[0] + "%";
             existingTarget.style.top = "" + matchingData[1] + "%";
@@ -108,9 +119,23 @@ function updateGameState(data) {
         } 
     });
 
-    document.getElementById("hp-display").innerHTML = data["hp"];
+    if (document.getElementById("hp-display").innerHTML != data["hp"]){
+        document.getElementById("hp-display").innerHTML = data["hp"];
+        removals -= parseInt(data["hp"]);
+        // new Audio("../../../static/FSApp/audio/damage-1.mp3").play();
+    }
     document.getElementById("kill-display").innerHTML = data["kills"];
-    
+
+    if (removals > 0){
+        if (removals === 1){
+            new Audio("../../../static/FSApp/audio/hit-1.mp3").play();
+        } else if (removals === 2){
+            new Audio("../../../static/FSApp/audio/hit-2.mp3").play();
+        } else {
+            new Audio("../../../static/FSApp/audio/hit-3.mp3").play();
+        }
+
+    }
     if (parseInt(data["hp"]) <= 0){
         clearInterval(updateInterval);
         // endOfGame()
@@ -127,11 +152,20 @@ function endOfGame(){
         method: "GET",
         dataType: "json",
         success: function(data) {
+            for (let i = 0; i < bgMusic.length; i++) {
+                bgMusic[i].pause();
+            }
+
             document.getElementById("end-of-game").classList.remove("hidden");
             document.getElementById("start-game-buttons").classList.remove("hidden");
+
+            if (data["current"]){
+                new Audio("../../../static/FSApp/audio/new_record.mp3").play();
+            } else {
+                new Audio("../../../static/FSApp/audio/game_over.mp3").play();
+            }
+
             document.getElementById("end-record-time").innerText = data["record"];
-
-
         },
         error: function (error) {
             console.error("Error in AJAX request update game state:", error);
@@ -168,19 +202,6 @@ function clickedFrame(event) {
     })
 }
 
-// function createTarget(targetId, x, y) {
-//     let target = document.createElement("div");
-//     target.classList.add("game-target");
-//     target.style.left = "" + x + "%";
-//     target.style.top = "" + y + "%";
-//     target.style.transform = "translate(-50%, -50%)";
-//
-//     target.onclick = clickedTarget;
-//
-//     target.id = targetId;
-//     return target;
-// }
-
 
 function createTarget(targetId, x, y, typeId) {
     let target = document.createElement("img");
@@ -206,7 +227,6 @@ function createTarget(targetId, x, y, typeId) {
 
 
 document.getElementById("frame").onclick = clickedFrame;
-// document.getElementById("start-game-buttons").onclick = clickedStartGame;
 
 buttons = document.getElementById('start-game-buttons').querySelectorAll("button").forEach(function(button) {
     button.onclick = clickedStartGame;
