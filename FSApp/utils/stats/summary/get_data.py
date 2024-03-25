@@ -32,11 +32,11 @@ def get_data(user_id):
     # records_queryset = UserRecords.objects.filter(user_id=user_id).select_related("game")
     # currenty no extra database query is done, as the data is already loaded
     # there is no guarantee that this is better than another query.
-    file = open("error", "w")
+
     record_data = []
     for difficulty, _ in Game.Difficulty.choices:
         durations = df[df["difficulty"] == difficulty]["duration"]
-        file.write(f"{durations}\n")
+
         if durations.empty:
             record_data.append(None)
         else:
@@ -48,6 +48,5 @@ def get_data(user_id):
             )
             record_data.append(record)
 
-    file.write(f"{record_data}")
     return overview_data[::-1], df, record_data
 

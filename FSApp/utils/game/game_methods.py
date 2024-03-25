@@ -55,10 +55,9 @@ def endGameJob(gameId):
         user_id = ids[0]
         UserPerGame.objects.create(user_id=user_id, game_id=gameId, click_count=user_ids_with_counts[user_id])
 
-        file = open("error.txt", "w")
         user_record = UserRecords.objects.filter(user_id=user_id, difficulty=cGame.difficulty).first()
         record_game = user_record.game
-        file.write(f"{user_record}\n{user_id}\n{cGame.difficulty}\n{record_game}")
+
         if record_game is None:
             record_time = timedelta(0)
         else:
@@ -128,8 +127,6 @@ def process_click(x, y, targets, elapsed_time, gameId, userId):
     target_spawned_at = None
     hit = False
 
-    file = open("error.txt", "a")
-
     delta = 200
     for target in targets:
         tx, ty, tId, t_spawned_at, *_ = target
@@ -157,9 +154,6 @@ def process_click(x, y, targets, elapsed_time, gameId, userId):
     if target_spawned_at is not None:
         hit = True
         elapsed_time_since_target_spawn = elapsed_time - target_spawned_at
-        file.write(f"{elapsed_time_since_target_spawn} {type(elapsed_time_since_target_spawn)}\n")
-    file.write("\n")
-    file.close()
 
     Click.objects.create(frame=1, x=x, y=y, hit=hit,
                          dx=dx, dy=dy,
