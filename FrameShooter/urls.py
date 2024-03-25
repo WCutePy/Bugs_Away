@@ -19,13 +19,14 @@ from django.urls import path, include
 
 from FSApp import views
 from FSApp.utils.game import game_responses
+from FSApp.utils.stats import stat_responses
 
 urlpatterns = [
     path("admin/", admin.site.urls),
 
     path("", views.home),
     path("game", views.game_page),
-    path("stats", views.stats),
+    path("stats", stat_responses.stats_page),
 
     path("login", views.login_view),
     path("register", views.register_view),
@@ -36,11 +37,9 @@ urlpatterns = [
     path(game_responses.receive_click.__name__, game_responses.receive_click),
     path(game_responses.get_end_of_game.__name__, game_responses.get_end_of_game),
 
-    path('personal_game_data/', views.personal_game_data),
-    path('get_replay/', views.get_replay),
+    path('personal_game_data/', stat_responses.personal_game_data),
+    path('get_replay/', stat_responses.get_replay),
 
     path("__debug__/", include("debug_toolbar.urls")),
-
-    path("test", views.test)
 ]
 

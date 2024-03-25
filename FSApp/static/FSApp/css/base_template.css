@@ -25,13 +25,7 @@
     position: absolute;
     left: 5%;
     top: 5%;
-
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    pointer-events: none;
   }
 }
 

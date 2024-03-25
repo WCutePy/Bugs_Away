@@ -9,7 +9,6 @@ def navbar_left_links():
         ["/", "Home"],
         ["/game", "Game"],
         ["/stats", "Stats"],
-        ["/test", "Test"]
     ]
 
 
@@ -23,9 +22,9 @@ def navbar_login():
 @register.simple_tag
 def difficulty_names():
     return (
-        "ez",
-        "alright",
-        "gangster",
+        "easy",
+        "medium",
+        "hard",
     )
 
 
@@ -33,3 +32,7 @@ def difficulty_names():
 def testing():
     return "hello how are you"
 
+
+@register.filter
+def index_of_record(data, index):
+    return data[index]

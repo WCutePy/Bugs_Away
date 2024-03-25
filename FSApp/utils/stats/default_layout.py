@@ -36,3 +36,22 @@ def apply_default_layout(fig):
         )
     except ValueError:
         pass
+
+
+def plots_to_html(plots, config=None):
+    if config is None:
+        config = dict(
+            displayModeBar=False,
+            editable=False,
+            scrollZoom=False,
+            showAxisDragHandles=False,
+            showAxisRangeEntryBoxes=False,
+            autosizable=False,
+        )
+
+    return [
+        fig.to_html(
+            full_html=False, config=config, auto_play=False,
+            include_plotlyjs=False,
+        ) for fig in plots
+    ]

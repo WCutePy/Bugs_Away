@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytz
+from django.db.models import Count
 
 from FSApp.utils.game.globals import *
 from FSApp.utils.game.GameState import GameState
@@ -12,7 +13,7 @@ from datetime import timedelta
 
 def createGame(difficulty_level: int):
     start_time = datetime.now(pytz.utc)
-    game = Game.objects.create(start_time=start_time)
+    game = Game.objects.create(start_time=start_time, difficulty=difficulty_level)
     gameId = game.id
     job = scheduler.add_job(
         updateGameState, "interval", seconds=SECONDS_PER_UPDATE,
@@ -27,25 +28,32 @@ def createGame(difficulty_level: int):
     return gameId, start_time
 
 
-def endGameJob(gameId, difficulty):
+def endGameJob(gameId):
     end_time = datetime.now(pytz.utc)
     cGame: GameState = activeGames[gameId]
     cGame.job.remove()
     cGame.terminate = True
-    # activeGames.pop(gameId)
+
     game_object = Game.objects.get(id=gameId)
     game_object.end_time = end_time
-
+    game_object.kills = cGame.kills
     game_object.save()
 
     game_time = end_time - cGame.start_time
 
-    user_ids = Click.objects.filter(game_id=gameId).values_list('user_id', flat=True).distinct()
-    ids = list(user_ids)
+    # user_ids = Click.objects.filter(game_id=gameId).values_list('user_id', flat=True).distinct()
+    # ids = list(user_ids)
+
+    click_counts = Click.objects.filter(game_id=gameId) \
+        .values('user_id') \
+        .annotate(click_count=Count('id'))
+
+    user_ids_with_counts = {click['user_id']: click['click_count'] for click in click_counts}
+    ids = list(user_ids_with_counts.keys())
 
     if ids:
         user_id = ids[0]
-        UserPerGame.objects.create(user_id=user_id, game_id=gameId)
+        UserPerGame.objects.create(user_id=user_id, game_id=gameId, click_count=user_ids_with_counts[user_id])
 
         file = open("error.txt", "w")
         user_record = UserRecords.objects.filter(user_id=user_id, difficulty=cGame.difficulty).first()
@@ -81,7 +89,7 @@ def updateGameState(gameId: int, difficulty: Difficulty):
                 cGame.targets.remove(target)
                 cGame.hp -= 1
                 if cGame.hp <= 0:
-                    endGameJob(gameId, difficulty)
+                    endGameJob(gameId)
                     break
         if (difficulty.SPAWN_RATE + (
                 int(count / difficulty.TICKS_PER_SPAWN_INCREASE) * difficulty.SPAWN_RATE_INCREASE)) > random():
@@ -92,7 +100,7 @@ def updateGameState(gameId: int, difficulty: Difficulty):
 
     cGame.timeout += 1
     if cGame.timeout > TIMEOUT_TICKS:
-        endGameJob(gameId, difficulty)
+        endGameJob(gameId)
 
 
 def create_target(cGame: GameState, difficulty: Difficulty) -> list:

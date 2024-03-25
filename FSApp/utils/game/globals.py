@@ -45,7 +45,6 @@ class Difficulty:
     SPEED_INCREASE: float
 
     SPAWN_DISTRIBUTION: tuple[float, ...]
-    TICKS_PER_SPAWN: int
     SPAWN_RATE: float
     TICKS_PER_SPAWN_INCREASE: int
     SPAWN_RATE_INCREASE: float
@@ -56,10 +55,9 @@ class Difficulty:
 easy = Difficulty(
     (1 / 9, 1 / 6, 1 / 4),
     int(20 / SECONDS_PER_UPDATE),
-    1 / 15,
+    1 / 25,
 
     (0.6, 0.3, 0.1),
-    35,
     0.01,
     int(15 / SECONDS_PER_UPDATE),
     0.0035,
@@ -67,22 +65,20 @@ easy = Difficulty(
 medium = Difficulty(
     (1 / 6, 1 / 4, 1 / 2.5),
     int(17.5 / SECONDS_PER_UPDATE),
-    1 / 15,
+    1 / 20,
 
     (0.5, 0.3, 0.2),
-    25,
-    0.02,
+    0.025,
     int(15 / SECONDS_PER_UPDATE),
     0.005,
 )
 hard = Difficulty(
     (1 / 4.5, 1 / 2.5, 1 / 1.75),
     int(15 / SECONDS_PER_UPDATE),
-    1 / 15,
+    1 / 17.5,
 
     (0.3, 0.35, 0.35),
-    17,
-    0.035,
+    0.045,
     int(12.5 / SECONDS_PER_UPDATE),
     0.005,
 )

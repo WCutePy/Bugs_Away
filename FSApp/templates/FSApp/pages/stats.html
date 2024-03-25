@@ -2,22 +2,40 @@
 
 {% load humanize %}
 {% load static %}
+{% load FSApp_extras %}
 
 {% block title %}Stats{% endblock %}
 
 {% block content %}
+<script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
+
 <div>
   <aside id="logo-sidebar" class="fixed top-0 left-0 z-10 h-screen mt-12 border-r
   bg-gray-800 border-gray-700 w-36" aria-label="Sidebar">
-   <div class="h-full px-3 pb-4 overflow-y-auto bg-gray-800">
-      <ul class="space-y-2 font-medium">
-        {% for id, date in items %}
-        <li class="flex justify-center ">
+   <div class="h-full pl-3 pr-1 pb-4 overflow-y-auto bg-gray-800">
+      <ul class="space-y-2 font-medium pt-1">
+        <li class="flex justify-center pt-1 h-10">
+
+          <button id="overview" onclick="clickedOverview()"
+                  class="flex flex-col items-center rounded-lg
+                  text-white w-28
+                  bg-blue-800 bg-opacity-25
+                  hover:bg-gray-700 group"
+            >
+            <span>Overview</span>
+          </button>
+
+        </li>
+        {% for id, date, time in items %}
+        <li class="flex justify-center pt-1">
 
           <button id="{{ id }}" onclick="clickedGameButton(this.id)"
-                  class="flex flex-col items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  class="flex flex-col items-center rounded-lg
+                  text-white w-28
+                  bg-blue-800 bg-opacity-25
+                  hover:bg-gray-700 group"
             >
-            <span>{{ id }}</span>
+            <span>{{ time }}</span>
             <span>{{ date | naturaltime}}</span>
           </button>
 
@@ -27,76 +45,114 @@
    </div>
   </aside>
 
-  <div id="stats-main" class="fixed h-[calc(100%-3rem)] ml-36 w-[calc(100%-9rem)] px-10 overscroll-none">
+  <div id="stats-main" class="fixed h-[calc(100%-3rem)] ml-36 w-[calc(100%-9rem)] overscroll-none">
 
     {% include "FSApp/components/error_box.html" %}
 
-    <div class="pt-4">
+    <div id="stats-summary" class="h-full pt-2 flex flex-col items-center overflow-auto px-10">
+
+        <h1 class="py-4 text-4xl">
+            Overview
+        </h1>
+
+        <div>
+            Total games: {{ total_games }}<br>
+            Total clicks: {{ clicks }}<br>
+            Total kills: {{ kills }}
+        </div>
+        <div class="pt-4 text-2xl">Records</div>
+        <div id="record-times pt-1" class="flex justify-between w-3/4 max-w-[540px]">
+
+            {% difficulty_names as difficulties %}
+            {% for record in records %}
+
+                <button id="record-{{ forloop.counter0 }}" onclick="clickedGameButton({{ record.0 }})"
+                  class="flex flex-col items-center enabled:bg-emerald-900 bg-opacity-75
+                  enabled:hover:bg-emerald-800
+                  bg-gray-600
+                  enabled:focus:ring-4 rounded-3xl
+                  group h-20 mx-2 w-44 pt-0.5" {% if not record %} disabled {% endif %}
+                >
+                    <span>{{ difficulties|index_of_record:forloop.counter0 }}</span>
+                    {% if record %}
+                        <span>{{ record.2 }}</span>
+                        <span>{{ record.1 | naturaltime}}</span>
+                    {% else %}
+                        <span>Play for a record</span>
+                    {% endif %}
+                </button>
+            {% endfor %}
+        </div>
+
+        <div id="activity-chart" class="pt-4">
+            {{ activity_chart | safe }}
+        </div>
 
     </div>
 
-    <div id="plot-1" class=" py-4 max-w-[1200px] mx-auto">
+    <div id="stats-individual-game" class="px-10">
 
-    </div>
-
-    <div class="flex flex-row justify-center">
-      <div class="">
-
-      </div>
-      <div class="overflow-auto">
-        <div id="plot-2" class="">
+        <div id="plot-1" class=" py-4 max-w-[500px] mx-auto">
 
         </div>
-        <div id="plot-3" class="hidden">
+
+        <div class="flex flex-row justify-center">
+          <div class="">
+
+          </div>
+          <div class="overflow-auto">
+            <div id="plot-2" class="">
+
+            </div>
+            <div id="plot-3" class="hidden">
+
+            </div>
+          </div>
+          <div id="dotplot-menu" class="mt-6 invisible w-20">
+            <div class="flex items-center mb-4">
+              <input checked id="radio-1" type="radio" value="1" name="default-radio" onclick="togglePlot(this)"
+                     class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+              <label for="radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Hits</label>
+            </div>
+            <div class="flex items-center">
+              <input id="radio-2" type="radio" value="2" name="default-radio" onclick="togglePlot(this)"
+                     class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+              <label for="radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Misses</label>
+            </div>
+          </div>
+        </div>
+
+
+        <div id="plot-4" class="py-4 max-w-[1169px] mx-auto">
 
         </div>
-      </div>
-      <div id="dotplot-menu" class="mt-6 invisible w-20">
-        <div class="flex items-center mb-4">
-          <input checked id="radio-1" type="radio" value="1" name="default-radio" onclick="togglePlot(this)"
-                 class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          <label for="radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Hits</label>
+        <div class="flex flex-row justify-center">
+        <div id="replay" class="py-4 overflow-auto">
+
         </div>
-        <div class="flex items-center">
-          <input id="radio-2" type="radio" value="2" name="default-radio" onclick="togglePlot(this)"
-                 class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          <label for="radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Misses</label>
         </div>
-      </div>
+        <div id="replay-request-text" class="flex justify-center invisible">
+            <button type="button" onclick="getReplay()"
+                    class="flex w-60 justify-center rounded-md mb-6
+            bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6
+            text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
+            focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get replay</button>
+        </div>
+        <div id="waiting" class="flex justify-center hidden mb-6">
+          <div role="status">
+            <svg aria-hidden="true" class="h-32 aspect-square text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+            </svg>
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
     </div>
-
-
-    <div id="plot-4" class="py-4 max-w-[1169px] mx-auto">
-
-    </div>
-    <div class="flex flex-row justify-center">
-    <div id="replay" class="py-4 overflow-auto">
-
-    </div>
-    </div>
-    <div id="replay-request-text" class="flex justify-center invisible">
-        <button type="button" onclick="getReplay()"
-                class="flex w-60 justify-center rounded-md mb-6
-        bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6
-        text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
-        focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get replay</button>
-    </div>
-    <div id="waiting" class="flex justify-center hidden mb-6">
-      <div role="status">
-        <svg aria-hidden="true" class="h-32 aspect-square text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-        </svg>
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
-
   </div>
 </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   <script src="{% static "FSApp/js/stats.js" %}"></script>
-  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
 
 {% endblock %}
 

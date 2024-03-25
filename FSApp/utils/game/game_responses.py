@@ -8,6 +8,7 @@ from FSApp.utils.game.GameState import GameState
 from FSApp.utils.game.globals import activeGames
 from FSApp.utils.game.game_methods import createGame, process_click
 from FSApp.models import CustomUser, UserRecords
+from FSApp.utils.generic import delta_time_to_string
 
 from datetime import timedelta
 
@@ -62,14 +63,10 @@ def get_end_of_game(request):
     if request.user.id is None:
         return JsonResponse({"record": "", "current": False})
 
-    # while not active_game.processed:
-    #     await asyncio.sleep(0.1)
-
     record_game = UserRecords.objects.filter(user_id=request.user.id, difficulty=active_game.difficulty).first().game
     if record_game is None:
         return JsonResponse({"record": "Please play the game", "current": False})
     record_id = record_game.id
     record = record_game.end_time - record_game.start_time
-    formatted_record = (f"{record.seconds // 60:02}m{record.seconds % 60:02}s"
-                        f"{str(record / timedelta(microseconds=1)  % 1000).zfill(0)[:2]}")
+    formatted_record = delta_time_to_string(record)
     return JsonResponse({"record": formatted_record, "current": gameId == record_id})

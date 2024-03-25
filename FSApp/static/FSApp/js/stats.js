@@ -5,7 +5,8 @@ const waitingElement = document.getElementById("waiting");
 const replayRequestText = document.getElementById("replay-request-text");
 const dotplotMenu = document.getElementById("dotplot-menu")
 
-
+let currentSideButton = document.getElementById("overview");
+currentSideButton.classList.remove("bg-blue-800");
 
 
 function clickedGameButton(gameId) {
@@ -22,6 +23,11 @@ function clickedGameButton(gameId) {
         replayRequestText.classList.replace("visible", "invisible");
         dotplotMenu.classList.replace("visible", "invisible");
         waitingElement.classList.replace("hidden", "visible");
+        document.getElementById("stats-summary").classList.add("hidden");
+
+        currentSideButton.classList.add("bg-blue-800");
+        currentSideButton = document.getElementById(`${gameId}`);
+        currentSideButton.classList.remove("bg-blue-800");
 
         $.ajax({
             url: `personal_game_data/?game_id=${gameId}`,
@@ -102,4 +108,17 @@ function togglePlot(radioButton) {
         document.getElementById('plot-3').classList.remove('hidden');
         document.getElementById('plot-2').classList.add('hidden');
     }
+}
+
+
+function clickedOverview(){
+    document.getElementById("stats-summary").classList.remove("hidden");
+    waitingElement.classList.replace("visible", "hidden");
+    replayRequestText.classList.replace("visible", "invisible");
+    dotplotMenu.classList.replace("visible", "invisible");
+    document.getElementById("stats-main").classList.remove("overflow-y-auto");
+
+    currentSideButton.classList.add("bg-blue-800");
+    currentSideButton = document.getElementById("overview");
+    currentSideButton.classList.remove("bg-blue-800");
 }

@@ -3,7 +3,6 @@
 - [ ] make end of game look good
 - [ ] account for setting a record on end of game
 - [ ] make stat left bar look good
-- [ ] make interval clearer -> x as visueel beter, label "interval delta time"
 
 
 ### In Progress
@@ -53,3 +52,6 @@
 - [X] add homescreen
 - [X] balance game -> maybe it's done
 - [X] hit detection moved to backend
+- [X] added *a lot* of audio
+- [X] balance the sounds for fucks sake -> fuck this
+- [X] make interval clearer -> x as visueel beter, label "interval delta time"

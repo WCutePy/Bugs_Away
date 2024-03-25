@@ -1,4 +1,4 @@
-from FSApp.utils.plots.default_layout import apply_default_layout
+from FSApp.utils.stats.default_layout import apply_default_layout
 import plotly.express as px
 import numpy as np
 import pandas as pd

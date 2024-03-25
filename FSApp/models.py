@@ -16,6 +16,7 @@ class Game(models.Model):
         MEDIUM = 1
         HARD = 2
     difficulty = models.IntegerField(choices=Difficulty.choices, default=Difficulty.EASY)
+    kills = models.IntegerField(default=0, blank=True)
 
 
 class CustomUser(AbstractUser):
@@ -49,7 +50,9 @@ class Click(models.Model):
 
 class UserPerGame(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="played_game",
+                             related_query_name="played_game")
+    click_count = models.IntegerField(default=0, blank=True)
 
 
 class UserRecords(models.Model):
